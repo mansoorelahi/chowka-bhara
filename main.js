@@ -4,45 +4,64 @@ var requestHandlers = require("./requestHandlers");
 
 var handle = {}
 handle["/"] = requestHandlers.index;
-handle["/notif"] = requestHandlers.notif;
-handle["/poke"] = requestHandlers.poke;
-handle["/cb"] = requestHandlers.cb;
 handle["/cb.js"] = requestHandlers.cbjs;
-handle["/cb_new"] = requestHandlers.cb_new;
-handle["/cb_new.js"] = requestHandlers.cbnewjs;
 handle["/raphael.js"] = requestHandlers.raphaeljs;
+handle["/jquery.url.js"] = requestHandlers.jqueryurljs;
+handle["/main.css"] = requestHandlers.css;
+handle["/game"] = requestHandlers.game;
+handle["/favicon.ico"] = requestHandlers.favicon;
 
 var nowjs = require("now");
 var everyone = nowjs.initialize(server.start(router.route, handle));
+// Declare a list of server rooms
+everyone.now.serverRoomsList = {1:'Room 1',2:'Room 2',3:'Room 3',
+4:'Room 4',5:'Room 5',6:'Room 6',7:'Room 7',8:'Room 8',9:'Room 9',10:'Room 10' };
 count = 1;
-var notif_arr = [];
+var max_group_count = 4;
 
 everyone.connected(function(){
-	console.log(this.groupName);
 	//to be got from mongoDB getNotifications
 	this.now.counter = 0;
 	//mongo DB per connection
-	console.log(this.user.clientId);
+	console.log("cb_server:" + new Date() + ":User client id is " + this.user.clientId);
 	this.now.uuid = ++count;
-	notif_arr[this.now.uuid] = 0;
 });
 
 everyone.disconnected(function(){
-	console.log("Left: " + this.now.name);
+	console.log("cb_server:" + new Date() + ":" + this.now.name + " left the Room " + this.now.serverRoom);
 });
 
+// Send message to everyone in the users group
+everyone.now.distributeMessage = function(message){
+  var group = nowjs.getGroup(this.now.serverRoom);
+  group.now.receiveMessage(this.now.name + '@Room' + this.now.serverRoom, message);
+};
+
+everyone.now.changeRoom = function(newRoom){
+  console.log("cb_server:" + new Date() + ":" + this.now.name + " tried Room " + newRoom);
+  var oldRoom = this.now.serverRoom;
+
+  //if old room is not null; then leave the old room
+  if(oldRoom){
+    var oldGroup = nowjs.getGroup(oldRoom);
+    oldGroup.removeUser(this.user.clientId);
+  }
+
+  // join the new room
+  var newGroup = nowjs.getGroup(newRoom);
+  var groupCount = 0;
+  newGroup.count(function (ct) {
+  	groupCount = ct;
+	});
+
+  if(groupCount < max_group_count){
+  	newGroup.addUser(this.user.clientId);
+	  this.now.serverRoom = newRoom;
+	  console.log("cb_server:" + new Date() + ":" + this.now.name + " joined Room " + this.now.serverRoom);
+  }  
+};
 
 everyone.now.update = function(pawn_id, att) {
 	//console.log(pawn_id);
 	everyone.now.updatePawn(pawn_id, att);
-}
-
-everyone.now.pokeMesg = function() { 
-	console.log(notif_arr[this.now.uuid]);
-	notif_arr[this.now.uuid] = notif_arr[this.now.uuid]+ 1;	
-	console.log(this.now.email);
-	console.log(notif_arr[this.now.uuid]);
-	// get friend list of the uuid - returns list of uuids
-	// increment the countter on the client side for that specific user
-	everyone.now.receiveNotif(this.now.uuid, notif_arr[this.now.uuid]);
 }

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Chowka Bhara</title>
+		<link type="text/css" rel="stylesheet" href="main.css" media="screen">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+		<script type="text/javascript" src="jquery.url.js"></script>
+		<script src="nowjs/now.js"></script> 
+		<script src="raphael.js" type="text/javascript" charset="utf-8"></script>
+		<script src="cb.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				now.ready(function(){
+					now.name = $.url().param('name');
+					now.changeRoom($.url().param('room'));
+				  now.distributeMessage(" joins the game");
+				});
+
+				// Receive messages from people in the same group
+				now.receiveMessage = function(name, message){
+					new_message = "<br/><b>" + name + "</b>: " + message;
+					if($("#messages").html() != null)
+						new_message += $("#messages").html();					
+					$("#messages").html(new_message);
+				};
+
+				// Send messages to people in the same group
+				$("#send-button").click(function(){
+					now.distributeMessage($("#text-input").val());
+					$("#text-input").val("");
+				});				
+			});
+		</script>
+	</head>
+	<body>
+		<h2><center>Chowka Bhara - A Classical Indian Multiplayer Board Game</center></h2>
+		<button id='butt' onClick="javascript:play_game()">ROLL DICE</button>
+		<div id="score"></div>
+		<div id="holder" class="holder"></div>
+		<input type="text" id="text-input" maxlength="40"/>
+		<input type="submit" value="Send message" id="send-button"/>
+		<div id="messages" class="messages"></div>
+	</body>
+</html>

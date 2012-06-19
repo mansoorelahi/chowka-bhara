@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Chowka Bhara</title>
+		<link type="text/css" rel="stylesheet" href="main.css" media="screen">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+		<script src="nowjs/now.js"></script> 
+		<script src="raphael.js" type="text/javascript" charset="utf-8"></script>
+		<script src="cb.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				now.name = prompt("And you are...?", "Guest" + new Date().getTime());
+				now.ready(function(){
+					// Pick up list of chatrooms from server and populate dropdown
+			    setServerRoomFromList(now.serverRoomsList);			    
+				});
+
+				// populate the #server-room dropdown from a list
+				function setServerRoomFromList(roomList){
+			    $('#server-room').empty();
+			    $.each(roomList, function(key, value){   
+				    var html_stuff = "<p class='room_box'>";
+				    html_stuff += "<a href='/game?room=" + key + "&name=" + now.name + "'>" + value + "</a>";
+				    html_stuff += "</p>";
+				    if(value)
+				    	$('#server-room').append(html_stuff);
+					});
+				}				
+			});
+		</script>
+	</head>
+	<body>
+		<div class="landing_page">
+			<center>
+				Chowka Bhara - A Classical Indian Multiplayer Board Game
+				<p>Features</p>
+				Content<br/>
+				Content<br/>
+				Content<br/>
+				Content<br/>
+				<hr/>
+				Start playing now<br/>
+				<div id="server-room" style="padding-left: 200px;">
+					Connecting ... Please Wait
+				</div>
+			</center>
+		</div>
+	</body>
+</html>

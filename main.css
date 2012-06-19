@@ -1,0 +1,41 @@
+body, h1, h2, h3, h4, h5, h6, p{
+	font-family: Arial, "MS Trebuchet", sans-serif;
+	color: #000;
+}
+
+.holder{
+	float: left;
+	width: 800px;
+	background-color: #eee;
+}
+
+.messages{
+	float: left;
+	width: 420px;
+	height: 300px;
+	padding: 5px;
+	overflow: auto;
+	font-size: 11px;
+}
+
+.landing_page{
+	font-family: Arial, "MS Trebuchet", sans-serif;
+	font-size: 30px;
+}
+
+.room_box{
+	background-color: #abc;
+	font-size: 14px;
+	padding: 5px;
+	float: left;
+	height: 80px;
+	width: 80px;
+	left: 5px;
+	text-align: center;
+	line-height: 80px;
+	border: 3px solid #ddd;
+}
+
+.room_box a{
+	text-decoration: none;
+}
