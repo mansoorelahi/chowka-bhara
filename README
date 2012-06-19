@@ -1,0 +1,5 @@
+A nodejs implementation of the Classical game of <a href='http://en.wikipedia.org/wiki/Chowka_bhara'>Chowka bhara</a> with :
+A. Attacking rules
+B. Pairing rules (Gatti)
+C. Safe house (Gatta)
+D. Multi-Player options
