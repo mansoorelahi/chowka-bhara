@@ -19,13 +19,14 @@ body, h1, h2, h3, h4, h5, h6, p{
 }
 
 .landing_page{
-	font-family: Arial, "MS Trebuchet", sans-serif;
-	font-size: 30px;
+	font-size: 24px;
 }
 
 .room_box{
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
 	background-color: #abc;
-	font-size: 14px;
+	font-size: 13px;
 	padding: 5px;
 	float: left;
 	height: 80px;
@@ -34,8 +35,23 @@ body, h1, h2, h3, h4, h5, h6, p{
 	text-align: center;
 	line-height: 80px;
 	border: 3px solid #ddd;
+	color: maroon;
+	font-weight: bold;
 }
 
-.room_box a{
+.box{
+	padding-left: 200px;
+}
+
+.box a{
 	text-decoration: none;
+}
+
+.box a:hover{
+	color: #fff;
+	background-color: grey;
+}
+
+.server_room{
+	font-size: 16px;
 }

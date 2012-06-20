@@ -20,8 +20,8 @@
 				function setServerRoomFromList(roomList){
 			    $('#server-room').empty();
 			    $.each(roomList, function(key, value){   
-				    var html_stuff = "<p class='room_box'>";
-				    html_stuff += "<a href='/game?room=" + key + "&name=" + now.name + "'>" + value + "</a>";
+				    var html_stuff = "<p class='box'>";
+				    html_stuff += "<a class='room_box' href='/game?room=" + key + "&name=" + now.name + "'>" + value + "</a>";
 				    html_stuff += "</p>";
 				    if(value)
 				    	$('#server-room').append(html_stuff);
@@ -40,9 +40,9 @@
 				Content<br/>
 				Content<br/>
 				<hr/>
-				Start playing now<br/>
-				<div id="server-room" style="padding-left: 200px;">
-					Connecting ... Please Wait
+				Start Playing Now ...<br/>
+				<div id="server-room" class='server_room'>
+					<p>Connecting ... Please Wait</p>
 				</div>
 			</center>
 		</div>
