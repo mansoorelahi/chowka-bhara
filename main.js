@@ -107,6 +107,12 @@ everyone.now.removeUserByModerator = function(group_id, user_id, callback){
 
 everyone.now.getUserNameById = function(user_id, callback){
   this.getGroups(function (groups) {
-    callback(nowjs.getGroup(groups[0])['users'][user_id]['now']['name']);
+    if(groups[0]['users'] != undefined)
+      callback(nowjs.getGroup(groups[0])['users'][user_id]['now']['name']);
   });
+}
+
+everyone.now.leaveRoom = function(group_id, callback){
+  nowjs.getGroup(group_id).removeUser(this.user.clientId);
+  callback();
 }

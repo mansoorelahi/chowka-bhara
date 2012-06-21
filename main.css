@@ -1,6 +1,5 @@
 body, h1, h2, h3, h4, h5, h6, p{
-	font-family: Arial, "MS Trebuchet", sans-serif;
-	color: #000;
+	font-family: Arial, "MS Trebuchet", "Calibri";
 }
 
 .holder{
@@ -17,27 +16,34 @@ body, h1, h2, h3, h4, h5, h6, p{
 
 .landing_page{
 	font-size: 24px;
+	background-color: #13354f;
+	color: #DDD;
+	height: 800px;
+	padding: 20px;
 }
 
 .room_box{
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	background-color: #abc;
-	font-size: 13px;
+	font-size: 14px;
 	padding: 10px;
 	float: left;
 	height: 80px;
 	width: 80px;
-	left: 5px;
 	text-align: center;
-	line-height: 80px;
+	line-height: 25px;
 	border: 3px solid #ddd;
 	color: maroon;
 	font-weight: bold;
 }
 
-.box{
-	padding-left: 200px;
+.box{}
+
+.box_spacer{
+	height: 80px;
+	width: 20px;
+	float: left;
 }
 
 .box a{
@@ -51,6 +57,9 @@ body, h1, h2, h3, h4, h5, h6, p{
 
 .server_room{
 	font-size: 16px;
+	padding: 10px;
+	height: 150px;
+
 }
 
 .game_panel{

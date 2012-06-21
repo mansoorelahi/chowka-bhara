@@ -6,14 +6,10 @@
 		<link type="text/css" rel="stylesheet" href="main.css" media="screen">
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 		<script src="nowjs/now.js"></script> 
-		<script src="raphael.js" type="text/javascript" charset="utf-8"></script>
-		<script src="cb.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
-				now.name = prompt("And you are...?", "Guest" + new Date().getTime());
 				now.ready(function(){
-					// Pick up list of chatrooms from server and populate dropdown
-			    setServerRoomFromList(now.serverRoomsList);			    
+					setServerRoomFromList(now.serverRoomsList);			    
 				});
 
 				// populate the #server-room dropdown from a list
@@ -21,8 +17,11 @@
 			    $('#server-room').empty();
 			    $.each(roomList, function(key, value){   
 				    var html_stuff = "<p class='box'>";
-				    html_stuff += "<a class='room_box' href='/game?room=" + key + "&name=" + now.name + "'>" + value + "</a>";
-				    html_stuff += "</p>";
+				    html_stuff += "<a class='room_box' href='/game?room=" + key + "'>" +
+				     value;
+				    html_stuff += "<br/>0 in play";
+				    html_stuff += "<br/>Open";
+				    html_stuff += "</a></p><p class='box_spacer'/>";
 				    if(value)
 				    	$('#server-room').append(html_stuff);
 					});

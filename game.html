@@ -41,11 +41,18 @@
 					$(link_id).hide(400);
 				});
 			});
+
+			$("#leave_room").live('click', function(){
+				now.distributeMessage(" left the room");
+				now.leaveRoom($.url().param('room'), function(){
+					window.location = "/";
+				});
+			});
 			
 			$(document).ready(function(){
 				now.ready(function(){
 					var room = $.url().param('room');
-					now.name = $.url().param('name');
+					now.name = prompt("And you are...?", "Guest" + new Date().getTime());
 					// place the current user in the game room
 					now.changeRoom(room);
 					
@@ -54,7 +61,7 @@
 						moderator = moderator_id;
 		      	now.userClientId(function(client_id){
 		      		client = client_id;
-		      		var load_msg = "joins the game";
+		      		var load_msg = " joins the game";
 		      		if(client == moderator){
 		      			load_msg += " as moderator";
 		      			is_moderator = true;
@@ -74,7 +81,8 @@
 					if(old_message != null)
 						new_message += old_message;					
 					$("#messages").html(new_message);
-					refresh_users_list($.url().param('room'));
+					if(new_message.indexOf("joins the game") != -1 || new_message.indexOf("left the room") != -1)
+						refresh_users_list($.url().param('room'));
 				};
 
 				// Send messages to people in the same group
@@ -100,7 +108,7 @@
 			<hr/>
 			<div id="menu" class='menu'>
 				<a class='menu_item' href='#'>Help</a>
-				<a class='menu_item' href='#'>Leave Room</a>
+				<a class='menu_item' id='leave_room' href='#'>Leave Room</a>
 				<span id="moderator_menu" class="moderator_menu">
 					<a class='menu_item' href='#'>Lock Room</a>
 					<br/>				
