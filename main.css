@@ -6,14 +6,11 @@ body, h1, h2, h3, h4, h5, h6, p{
 .holder{
 	float: left;
 	width: 800px;
-	background-color: #eee;
 }
 
 .messages{
-	float: left;
-	width: 420px;
 	height: 300px;
-	padding: 5px;
+	padding: 10px;
 	overflow: auto;
 	font-size: 11px;
 }
@@ -27,7 +24,7 @@ body, h1, h2, h3, h4, h5, h6, p{
 	-webkit-border-radius: 5px;
 	background-color: #abc;
 	font-size: 13px;
-	padding: 5px;
+	padding: 10px;
 	float: left;
 	height: 80px;
 	width: 80px;
@@ -54,4 +51,46 @@ body, h1, h2, h3, h4, h5, h6, p{
 
 .server_room{
 	font-size: 16px;
+}
+
+.game_panel{
+	width: 500px;
+	float: right;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	background-color: #abc;
+	padding: 10px;
+}
+
+.moderator_menu{
+	display: none;
+}
+
+.menu{
+	padding: 10px;
+}
+
+.menu a{
+	text-decoration: none;
+}
+
+.menu a:hover{
+	color: #fff;
+	background-color: grey;
+}
+
+.menu_item{
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	font-size: 12px;
+	background-color: #aaa;
+	border: 3px solid #ddd;
+	padding: 5px;
+	color: maroon;
+}
+
+.score{
+	font-weight: bold;
+	font-size: 14px;
+	color: maroon;
 }

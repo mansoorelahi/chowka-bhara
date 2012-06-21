@@ -10,19 +10,71 @@
 		<script src="raphael.js" type="text/javascript" charset="utf-8"></script>
 		<script src="cb.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
+			var moderator = 0, client = 0;
+			var is_moderator = false;
+
+			function refresh_users_list(room){
+				// get all group users and populate the list
+	      now.getGroupUsers(room, function(users){
+	      	var users_list = "";
+	      	$.each(users, function(key, user){
+	      		if(is_moderator && user != moderator){
+	      			now.getUserNameById(user, function(name){
+								users_list += "<a class='menu_item' href='#' group_id='" +
+		      			 room + "' user_id='" + user + "' id='" + user + "'>Remove " +
+		      			 name + "</a>";
+	      				$("#users_list").html(users_list);
+							});	      			
+	      		}
+	      	});
+	      });
+			}
+
+			$("#users_list a").live('click', function(){
+				var user_id = $(this).attr('user_id');
+				var group_id = $(this).attr('group_id');
+				var link_id = '#' + $(this).attr('id');
+				now.getUserNameById(user_id, function(name){
+					now.distributeMessage(name + " was removed from this room");					
+				});
+				now.removeUserByModerator(group_id, user_id, function(user_id){
+					$(link_id).hide(400);
+				});
+			});
+			
 			$(document).ready(function(){
 				now.ready(function(){
+					var room = $.url().param('room');
 					now.name = $.url().param('name');
-					now.changeRoom($.url().param('room'));
-				  now.distributeMessage(" joins the game");
-				});
+					// place the current user in the game room
+					now.changeRoom(room);
+					
+					// appoint a moderator for the current game room
+					now.groupModerator(room, function(moderator_id){
+						moderator = moderator_id;
+		      	now.userClientId(function(client_id){
+		      		client = client_id;
+		      		var load_msg = "joins the game";
+		      		if(client == moderator){
+		      			load_msg += " as moderator";
+		      			is_moderator = true;
+		      			$("#moderator_menu").show(400);
+		      		}
+		      		now.distributeMessage(load_msg);
+		      	});
+		      });
 
+		      refresh_users_list(room);	      	
+				});
+				
 				// Receive messages from people in the same group
 				now.receiveMessage = function(name, message){
-					new_message = "<br/><b>" + name + "</b>: " + message;
-					if($("#messages").html() != null)
-						new_message += $("#messages").html();					
+					var new_message = "<br/><b>" + name + "</b>: " + message;
+					var old_message = $("#messages").html();
+					if(old_message != null)
+						new_message += old_message;					
 					$("#messages").html(new_message);
+					refresh_users_list($.url().param('room'));
 				};
 
 				// Send messages to people in the same group
@@ -36,13 +88,25 @@
 	<body>
 		<h2><center>Chowka Bhara - A Classical Indian Multiplayer Board Game</center></h2>
 		<div id="holder" class="holder"></div>
-		<div>
+		<div class="game_panel">
 			<button id='butt' onClick="javascript:play_game()">ROLL DICE</button>
-			<span id="score"></span>
+			<span id="score" class="score"></span>
 			<hr/>
-			<input type="text" id="text-input" maxlength="40"/>
-			<input type="submit" value="Send message" id="send-button"/>
-			<div id="messages" class="messages"></div>
+			<div class="messages">
+				<input type="text" id="text-input" maxlength="40"/>
+				<input type="submit" value="Send message" id="send-button"/>
+				<p id="messages"></p>
+			</div>
+			<hr/>
+			<div id="menu" class='menu'>
+				<a class='menu_item' href='#'>Help</a>
+				<a class='menu_item' href='#'>Leave Room</a>
+				<span id="moderator_menu" class="moderator_menu">
+					<a class='menu_item' href='#'>Lock Room</a>
+					<br/>				
+					<p id='users_list'></p>
+				</span>
+			</div>
 		</div>
 	</body>
 </html>
