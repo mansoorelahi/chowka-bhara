@@ -68,7 +68,10 @@
 					var room = $.url().param('room');
 					now.name = prompt("And you are...?", "Guest" + new Date().getTime());
 					// place the current user in the game room
-					now.changeRoom(room);
+					now.changeRoom(room, function(success){
+						if(!success)
+							window.location = "/"; // room locked, redirect back
+					});
 					
 					// appoint a moderator for the current game room
 					now.groupModerator(function(moderator_id){

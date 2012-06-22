@@ -23,18 +23,22 @@ everyone.now.serverRoomsList = {
 count = 1;
 var max_group_count = 4;
 
+function log_prefix(){
+  return "cb_server:" + new Date() + ":";
+}
+
 everyone.connected(function(){
 	//to be got from mongoDB getNotifications
 	this.now.counter = 0;
 	//mongo DB per connection
-	console.log("cb_server:" + new Date() + ":User client id is " + this.user.clientId);
+	console.log(log_prefix() + "User client id is " + this.user.clientId);
 	this.now.uuid = ++count;
   this.now.moderator = false;
 });
 
 everyone.disconnected(function(){
   nowjs.getGroup(this.now.serverRoom).locked = false;
-	console.log("cb_server:" + new Date() + ":" + this.now.name + " disconnected from the Room " + this.now.serverRoom);
+	console.log(log_prefix() + this.now.name + " disconnected from the Room " + this.now.serverRoom);
 });
 
 // Send message to everyone in the users group
@@ -43,8 +47,8 @@ everyone.now.distributeMessage = function(message){
   group.now.receiveMessage(this.now.name, message);
 }
 
-everyone.now.changeRoom = function(newRoom){
-  console.log("cb_server:" + new Date() + ":" + this.now.name + " tried Room " + newRoom);
+everyone.now.changeRoom = function(newRoom, callback){
+  console.log(log_prefix() + this.now.name + " tried Room " + newRoom);
   var oldRoom = this.now.serverRoom;
 
   //if old room is not null; then leave the old room
@@ -55,7 +59,8 @@ everyone.now.changeRoom = function(newRoom){
 
   // join the new room
   var newGroup = nowjs.getGroup(newRoom);
-  newGroup.locked = false;
+  if(newGroup.locked == undefined)
+    newGroup.locked = false;
   
   // check max group count for current group
   var groupCount = 0;
@@ -63,23 +68,23 @@ everyone.now.changeRoom = function(newRoom){
   	groupCount = ct;
 	});
 
-  if(groupCount < max_group_count){
+  if(groupCount < max_group_count && !newGroup.locked){
   	newGroup.addUser(this.user.clientId);
 	  this.now.serverRoom = newRoom;
-	  console.log("cb_server:" + new Date() + ":" + this.now.name + " joined Room " + this.now.serverRoom);
+	  console.log(log_prefix() + this.now.name + " joined Room " + this.now.serverRoom);
 
     // make the first player, moderator of the current group
     if(groupCount == 0){
       newGroup.moderator = this.user.clientId;
       this.now.moderator = true;
-      console.log("cb_server:" + new Date() + ":" + this.now.name + " is the moderator of Room " + this.now.serverRoom);
+      console.log(log_prefix() + this.now.name + " is the moderator of Room " + this.now.serverRoom);
     }else if(groupCount == (max_group_count - 1)){
-      // final entry, rooms full
-      newGroup.locked = true;
+      newGroup.locked = true; // last player, rooms full
     }
+    callback(true);
   }else{
-    // rooms full
-    newGroup.locked = true;
+    console.log(log_prefix() + this.now.name + " entry denied to Room " + this.now.serverRoom + " - duh its locked!!!");
+    callback(false);
   }  
 }
 
