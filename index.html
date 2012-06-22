@@ -9,21 +9,30 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				now.ready(function(){
-					setServerRoomFromList(now.serverRoomsList);			    
+					setServerRoomFromList(now.serverRoomsList);
 				});
 
-				// populate the #server-room dropdown from a list
+				// populate the game room list
 				function setServerRoomFromList(roomList){
 			    $('#server-room').empty();
-			    $.each(roomList, function(key, value){   
-				    var html_stuff = "<p class='box'>";
-				    html_stuff += "<a class='room_box' href='/game?room=" + key + "'>" +
-				     value;
-				    html_stuff += "<br/>0 in play";
-				    html_stuff += "<br/>Open";
-				    html_stuff += "</a></p><p class='box_spacer'/>";
-				    if(value)
-				    	$('#server-room').append(html_stuff);
+			    $.each(roomList, function(key, value){
+			    	now.groupCount(key, function(count){
+				    	now.getRoomStatus(key, function(is_locked){
+				    		var html_stuff = "<p class='box'>";
+						    if(is_locked){
+						    	html_stuff += "<a onclick='return false;' class='room_box' href='/game?room=" + key + "'>" + value;
+						    	html_stuff += "<br/>" + count + " in play";
+						    	html_stuff += "<br/>Locked";
+						    }else{
+						    	html_stuff += "<a class='room_box' href='/game?room=" + key + "'>" + value;
+						    	html_stuff += "<br/>" + count + " in play";
+						    	html_stuff += "<br/>Open";
+						    }
+						    html_stuff += "</a></p><p class='box_spacer'/>";
+						    if(value)
+						    	$('#server-room').append(html_stuff);
+				    	});
+				    });
 					});
 				}				
 			});

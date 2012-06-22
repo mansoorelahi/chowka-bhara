@@ -33,6 +33,7 @@ everyone.connected(function(){
 });
 
 everyone.disconnected(function(){
+  nowjs.getGroup(this.now.serverRoom).locked = false;
 	console.log("cb_server:" + new Date() + ":" + this.now.name + " disconnected from the Room " + this.now.serverRoom);
 });
 
@@ -54,6 +55,7 @@ everyone.now.changeRoom = function(newRoom){
 
   // join the new room
   var newGroup = nowjs.getGroup(newRoom);
+  newGroup.locked = false;
   
   // check max group count for current group
   var groupCount = 0;
@@ -71,7 +73,13 @@ everyone.now.changeRoom = function(newRoom){
       newGroup.moderator = this.user.clientId;
       this.now.moderator = true;
       console.log("cb_server:" + new Date() + ":" + this.now.name + " is the moderator of Room " + this.now.serverRoom);
+    }else if(groupCount == (max_group_count - 1)){
+      // final entry, rooms full
+      newGroup.locked = true;
     }
+  }else{
+    // rooms full
+    newGroup.locked = true;
   }  
 }
 
@@ -79,23 +87,23 @@ everyone.now.update = function(pawn_id, att) {
 	everyone.now.updatePawn(pawn_id, att);
 }
 
-everyone.now.groupModerator = function(group_id, callback){
-  callback(nowjs.getGroup(group_id).moderator);
+everyone.now.groupModerator = function(callback){
+  callback(nowjs.getGroup(this.now.serverRoom).moderator);
 }
 
 everyone.now.userClientId = function(callback){
   callback(this.user.clientId);
 }
 
-everyone.now.getGroupUsers = function(group_id, callback){
+everyone.now.getGroupUsers = function(callback){
   everyone.getUsers(function (users){ 
     callback(users);
   });
 }
 
-everyone.now.removeUserByModerator = function(group_id, user_id, callback){
+everyone.now.removeUserByModerator = function(user_id, callback){
   if(this.now.moderator && user_id != this.user.clientId){
-    var group = nowjs.getGroup(group_id);
+    var group = nowjs.getGroup(this.now.serverRoom);
     group.hasClient(user_id, function (bool) { 
       if (bool){
         group.removeUser(user_id);
@@ -112,7 +120,30 @@ everyone.now.getUserNameById = function(user_id, callback){
   });
 }
 
-everyone.now.leaveRoom = function(group_id, callback){
-  nowjs.getGroup(group_id).removeUser(this.user.clientId);
+everyone.now.leaveRoom = function(callback){
+  nowjs.getGroup(this.now.serverRoom).locked = false;
+  nowjs.getGroup(this.now.serverRoom).removeUser(this.user.clientId);
   callback();
+}
+
+// lock room if the user is moderator with atleast 2 players
+everyone.now.lockRoom = function(callback){
+  var moderator = this.now.moderator;
+  var group = nowjs.getGroup(this.now.serverRoom);
+  group.count(function (count) {
+    if(moderator && count > 1 && count < (max_group_count + 1)){
+      group.locked = true;
+    }
+    callback(group.locked);
+  });
+}
+
+everyone.now.groupCount = function(group_id, callback){
+  nowjs.getGroup(group_id).count(function (count) {
+    callback(count);
+  });
+}
+
+everyone.now.getRoomStatus = function(group_id, callback){
+  callback(nowjs.getGroup(group_id).locked);
 }

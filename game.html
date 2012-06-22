@@ -13,15 +13,15 @@
 			var moderator = 0, client = 0;
 			var is_moderator = false;
 
-			function refresh_users_list(room){
+			function refresh_users_list(){
 				// get all group users and populate the list
-	      now.getGroupUsers(room, function(users){
+	      now.getGroupUsers(function(users){
 	      	var users_list = "";
 	      	$.each(users, function(key, user){
 	      		if(is_moderator && user != moderator){
 	      			now.getUserNameById(user, function(name){
-								users_list += "<a class='menu_item' href='#' group_id='" +
-		      			 room + "' user_id='" + user + "' id='" + user + "'>Remove " +
+								users_list += "<a class='menu_item' href='#' user_id='" +
+								 user + "' id='" + user + "'>Remove " +
 		      			 name + "</a>";
 	      				$("#users_list").html(users_list);
 							});	      			
@@ -32,20 +32,34 @@
 
 			$("#users_list a").live('click', function(){
 				var user_id = $(this).attr('user_id');
-				var group_id = $(this).attr('group_id');
 				var link_id = '#' + $(this).attr('id');
 				now.getUserNameById(user_id, function(name){
 					now.distributeMessage(name + " was removed from this room");					
 				});
-				now.removeUserByModerator(group_id, user_id, function(user_id){
+				now.removeUserByModerator(user_id, function(user_id){
 					$(link_id).hide(400);
 				});
 			});
 
 			$("#leave_room").live('click', function(){
 				now.distributeMessage(" left the room");
-				now.leaveRoom($.url().param('room'), function(){
+				now.leaveRoom(function(){
 					window.location = "/";
+				});
+			});
+
+			$("#lock_room").live('click', function(){
+				var link_id = '#' + $(this).attr('id');
+				now.lockRoom(function(is_locked){
+					if(is_locked){
+						$(link_id).hide(400);
+						now.distributeMessage(" locked the room");
+					}else{
+						$('#menu_messages').html("Not enough players to Lock the room<br/>");
+						setTimeout(function(){
+							$('#menu_messages').html("");
+						},5000);
+					}
 				});
 			});
 			
@@ -57,7 +71,7 @@
 					now.changeRoom(room);
 					
 					// appoint a moderator for the current game room
-					now.groupModerator(room, function(moderator_id){
+					now.groupModerator(function(moderator_id){
 						moderator = moderator_id;
 		      	now.userClientId(function(client_id){
 		      		client = client_id;
@@ -71,7 +85,7 @@
 		      	});
 		      });
 
-		      refresh_users_list(room);	      	
+		      refresh_users_list();	      	
 				});
 				
 				// Receive messages from people in the same group
@@ -82,7 +96,7 @@
 						new_message += old_message;					
 					$("#messages").html(new_message);
 					if(new_message.indexOf("joins the game") != -1 || new_message.indexOf("left the room") != -1)
-						refresh_users_list($.url().param('room'));
+						refresh_users_list();					
 				};
 
 				// Send messages to people in the same group
@@ -107,12 +121,13 @@
 			</div>
 			<hr/>
 			<div id="menu" class='menu'>
+				<p id='menu_messages'></p>
 				<a class='menu_item' href='#'>Help</a>
 				<a class='menu_item' id='leave_room' href='#'>Leave Room</a>
 				<span id="moderator_menu" class="moderator_menu">
-					<a class='menu_item' href='#'>Lock Room</a>
+					<a class='menu_item' id='lock_room' href='#'>Lock Room</a>
 					<br/>				
-					<p id='users_list'></p>
+					<p id='users_list'></p>					
 				</span>
 			</div>
 		</div>
