@@ -9,6 +9,7 @@
 		<script src="nowjs/now.js"></script> 
 		<script src="raphael.js" type="text/javascript" charset="utf-8"></script>
 		<script src="cb.js" type="text/javascript" charset="utf-8"></script>
+		<script src="jquery_popup.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var moderator = 0, client = 0;
 			var is_moderator = false;
@@ -62,6 +63,18 @@
 					}
 				});
 			});
+
+			$("#help_div").live('click', function(){
+				$.get('README', function(data) {
+        	$("#contactArea").html($(data));
+        	loadPopup();
+					centerPopup();
+      	});
+			});
+
+			$("#help_close_link").live('click', function(){
+				disablePopup();
+			});
 			
 			$(document).ready(function(){
 				now.ready(function(){
@@ -111,6 +124,14 @@
 		</script>
 	</head>
 	<body>
+		<div id="popupContact">		
+			<div id="contactArea">
+				<center><img src='ajax-loading.gif'/></center>
+				<center><b>Loading Please wait ...</b></center> 
+			</div>
+		</div>
+		<div id="backgroundPopup"></div>
+
 		<h2><center>Chowka Bhara - A Classical Indian Multiplayer Board Game</center></h2>
 		<div id="holder" class="holder"></div>
 		<div class="game_panel">
@@ -125,7 +146,7 @@
 			<hr/>
 			<div id="menu" class='menu'>
 				<p id='menu_messages'></p>
-				<a class='menu_item' href='#'>Help</a>
+				<a class='menu_item' id='help_div' href='#'>Help</a>
 				<a class='menu_item' id='leave_room' href='#'>Leave Room</a>
 				<span id="moderator_menu" class="moderator_menu">
 					<a class='menu_item' id='lock_room' href='#'>Lock Room</a>

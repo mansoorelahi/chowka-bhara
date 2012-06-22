@@ -8,6 +8,24 @@ function favicon(response) {
 	});
 }
 
+function loading_image(response) {
+  console.log("cb_server:" + new Date() + ":Request handler 'loading_image' was called.");
+	fs.readFile('ajax-loading.gif', function(err, data){
+		response.writeHead(200, {'Content-Type':'image/gif'});
+		response.write(data);
+		response.end();
+	});
+}
+
+function README(response) {
+  console.log("cb_server:" + new Date() + ":Request handler 'README' was called.");
+	fs.readFile('README', function(err, data){
+		response.writeHead(200, {'Content-Type':'text/html'});
+		response.write(data);
+		response.end();
+	});
+}
+
 function css(response) {
   console.log("cb_server:" + new Date() + ":Request handler 'css' was called.");
 	fs.readFile('main.css', function(err, data){
@@ -62,10 +80,22 @@ function jqueryurljs(response) {
 	});
 }
 
+function jquerypopupjs(response) {
+  console.log("cb_server:" + new Date() + ":Request handler 'jbquerypopupjs' was called.");
+	fs.readFile('jquery_popup.js', function(err, data){
+		response.writeHead(200, {'Content-Type':'text/javascript'});
+		response.write(data);
+		response.end();
+	});
+}
+
 exports.raphaeljs = raphaeljs;
 exports.jqueryurljs = jqueryurljs;
+exports.jquerypopupjs = jquerypopupjs;
 exports.cbjs = cbjs;
 exports.favicon = favicon;
 exports.css = css;
 exports.index = index;
 exports.game = game;
+exports.README = README;
+exports.loading_image = loading_image;

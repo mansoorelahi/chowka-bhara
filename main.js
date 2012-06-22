@@ -7,9 +7,12 @@ handle["/"] = requestHandlers.index;
 handle["/cb.js"] = requestHandlers.cbjs;
 handle["/raphael.js"] = requestHandlers.raphaeljs;
 handle["/jquery.url.js"] = requestHandlers.jqueryurljs;
+handle["/jquery_popup.js"] = requestHandlers.jquerypopupjs;
 handle["/main.css"] = requestHandlers.css;
 handle["/game"] = requestHandlers.game;
 handle["/favicon.ico"] = requestHandlers.favicon;
+handle["/ajax-loading.gif"] = requestHandlers.loading_image;
+handle["/README"] = requestHandlers.README;
 
 var nowjs = require("now");
 var everyone = nowjs.initialize(server.start(router.route, handle));
