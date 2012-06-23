@@ -76,7 +76,7 @@ function getPawnById(pawn_id) {
 
 function getBoxId(x, y) {
 
-	x = x - 200;
+	x = x - left_width;
 	y = y - (y%82);
 	
 	_i = Math.floor(x / 82);
@@ -89,7 +89,7 @@ function getBoxId(x, y) {
 
 function getBoxDim(id) {
 	y = Math.floor(id%10)*80 + Math.floor(((id%10) - 1)*2);
-	x = Math.floor(id/10)*80 + Math.floor(((id/10) - 1)*2) + 200;
+	x = Math.floor(id/10)*80 + Math.floor(((id/10) - 1)*2) + left_width;
 
 	dim = {};
 	dim.x = x;
@@ -295,8 +295,10 @@ var value = 0;
 var uuid = 0;
 var free_hit = 0;
 var cb_hit = 0;
+var left_width = 100;
+
 window.onload = function () {
-	var r = Raphael("holder", 840, 840);
+	var r = Raphael("holder", 640, 640);	
 //	r.rect(200, 20, 325, 325, 2);
 	var dragger = function () {
 			this.ox = this.type == "rect" ? this.attr("x") : this.attr("cx");
@@ -366,7 +368,7 @@ window.onload = function () {
 		for(j = 1; j <= 5; j++)
 		{
 			var box = new Box(); 
-			var rect = r.rect(200 + i*80 + i * 2, j * 80 + j *2, 80, 80, 2);
+			var rect = r.rect(left_width + i*80 + i * 2, j * 80 + j *2, 80, 80, 2);
 			box.id = i*10 + j;
 			box.rect = rect;
 			
@@ -374,9 +376,9 @@ window.onload = function () {
 
 			if( ((i == 1 || i == 5 || i == 3) && (j == 3) || (j == 1 || j == 5 || j == 3) && (i == 3)))
 			{
-				var x1 = 200 + i*80 + i * 2;
+				var x1 = left_width + i*80 + i * 2;
 				var y1 = j * 80 + j *2;
-				var x2 = 200 + i*80 + i * 2 + 80;
+				var x2 = left_width + i*80 + i * 2 + 80;
 				var y2 = j * 80 + j *2 + 80;
 				var path_str = "M"+x1+" "+y1+"L"+x2+ " "+y2;
 				r.path(path_str);
