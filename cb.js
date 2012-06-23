@@ -210,6 +210,10 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 	var from_indx = players[player_id-1].path.findIndex(from_id);
 	var to_indx = players[player_id-1].path.findIndex(to_id);
 
+	if(player_id != (now.turn + 1)) {
+                return false;
+        }
+
 //if from_box has 2 pawns - then gatti break 
 //isPairing should have .occupied = 2
 //this should make it one.
@@ -323,6 +327,7 @@ window.onload = function () {
 					this.attr(att);
 					r.safari();
 					this_pawn.currentBox = from_id;
+					values.push(value);
 					//now.update(this.id, att, from_id);
 				}
 				else
@@ -335,9 +340,9 @@ window.onload = function () {
 						now.turn_change();
 						value = 0;
 					}
-					else {
-						value = values.pop();
-					}
+					//else {
+					//	value = values.pop();
+					//}
 					boxes[from_id].occupied = 0;
 					boxes[to_id].occupied = 1;
 					//if(boxes.[to_id].occupied_player.length == 0) {
