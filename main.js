@@ -91,10 +91,6 @@ everyone.now.changeRoom = function(newRoom, callback){
   }  
 }
 
-everyone.now.update = function(pawn_id, att) {
-	everyone.now.updatePawn(pawn_id, att);
-}
-
 everyone.now.groupModerator = function(callback){
   callback(nowjs.getGroup(this.now.serverRoom).moderator);
 }
@@ -154,4 +150,45 @@ everyone.now.groupCount = function(group_id, callback){
 
 everyone.now.getRoomStatus = function(group_id, callback){
   callback(nowjs.getGroup(group_id).locked);
+}
+
+Array.prototype.findIndex = function(value){
+                var ctr = -1;
+                for (var i=0; i < this.length; i++) {
+                                if (this[i] == value) {
+                                                return i;
+                                }
+                }
+                return ctr;
+};
+
+everyone.now.players_arr = [];
+everyone.now.turn = 0;
+
+everyone.now.update = function(pawn_id, att, from_id, to_id) {
+	console.log(pawn_id);
+	console.log(att);
+	everyone.now.updatePawn(pawn_id, att, from_id, to_id);
+}
+
+everyone.now.turn_change = function () {
+	everyone.now.turn = everyone.now.turn + 1 ;
+	everyone.now.turn = everyone.now.turn % 2;
+}
+
+everyone.now.addPlayer = function(pid) {
+	everyone.now.players_arr.push(pid);
+	console.log(everyone.now.players_arr);
+}
+
+everyone.now.get_val = function() {
+//get array check here itself.
+	var possible_values = [1,2,3,4,8];
+	_val = Math.floor(Math.random()*10);
+	console.log("recieved"  +  _val);
+	while(!(possible_values.findIndex(_val)>=0)) {
+		console.log("recieved"  +  _val);
+		_val = Math.floor(Math.random()*10);
+	}
+	everyone.now.vali = _val;
 }
