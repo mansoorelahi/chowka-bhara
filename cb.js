@@ -448,10 +448,10 @@ console.log(_val);
 
 function getuuid() {
 	var uuidContent = document.getElementById('uuidDiv');
-	uuidDiv.innerHTML = "Please wait till we fetch your player Id" ;
+	uuidContent.innerHTML = "Please wait till we fetch your player Id" ;
 	setTimeout(function() {
 		uuid = now.uuid;
-		uuidDiv.innerHTML = "Your player Id is set " + uuid ;
+		uuidContent.innerHTML = "Your player Id is set " + uuid ;
 		setTimeout(function() {
 			now.addPlayer(uuid);
 		//	console.log(now.players_arr);
@@ -478,14 +478,14 @@ function play_game(){
 	//now.get_val();
 	now.get_val();
 	var myScore = document.getElementById('score');
-	score.innerHTML = "Dice is rolling on the server - good luck!!";
+	myScore.innerHTML = "Dice is rolling on the server - good luck!!";
 	setTimeout(function() {
 			free_hit = 0;
 			//window.value = now.vali;
 			var server_val = now.vali;
 			values.push(server_val);
 			//window.value = values.pop();
-        		score.innerHTML =server_val;
+        		myScore.innerHTML =server_val;
 			if(server_val == 4 || server_val == 8) {
 				free_hit = 1;
 			}
