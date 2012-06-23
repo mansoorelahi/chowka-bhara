@@ -313,6 +313,7 @@ window.onload = function () {
 					this_pawn = getPawnById(this.id);
                                         this_pawn.currentBox = to_id;
 					now.update(this.id, att, from_id, to_id);
+					return;
 				}
 				window.value = values.pop();
 				if(!isLegal(this.id, from_id, to_id, value))
@@ -348,6 +349,7 @@ window.onload = function () {
 					//make the pawn moved to true so that it wont get moved again
 					is_pawn_moved = 1;
 					now.update(this.id, att, from_id, to_id);
+				console.log("coming");
 				}
 			
 		};
