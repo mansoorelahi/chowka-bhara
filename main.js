@@ -44,6 +44,11 @@ everyone.disconnected(function(){
 	console.log(log_prefix() + this.now.name + " disconnected from the Room " + this.now.serverRoom);
 });
 
+nowjs.on('newgroup', function (group) {
+  group.now.players_arr = [];
+  group.now.turn = 0;
+});
+
 // Send message to everyone in the users group
 everyone.now.distributeMessage = function(message){
   var group = nowjs.getGroup(this.now.serverRoom);
@@ -162,23 +167,23 @@ Array.prototype.findIndex = function(value){
                 return ctr;
 };
 
-everyone.now.players_arr = [];
-everyone.now.turn = 0;
-
 everyone.now.update = function(pawn_id, att, from_id, to_id) {
 	console.log(pawn_id);
 	console.log(att);
-	everyone.now.updatePawn(pawn_id, att, from_id, to_id);
+	var group = nowjs.getGroup(this.now.serverRoom);
+  group.now.updatePawn(pawn_id, att, from_id, to_id);
 }
 
 everyone.now.turn_change = function () {
-	everyone.now.turn = everyone.now.turn + 1 ;
-	everyone.now.turn = everyone.now.turn % 2;
+	var group = nowjs.getGroup(this.now.serverRoom);
+  group.now.turn = group.now.turn + 1;
+	group.now.turn = group.now.turn % 2;
 }
 
 everyone.now.addPlayer = function(pid) {
-	everyone.now.players_arr.push(pid);
-	console.log(everyone.now.players_arr);
+	var group = nowjs.getGroup(this.now.serverRoom);
+  group.now.players_arr.push(pid);
+	console.log(group.now.players_arr);
 }
 
 everyone.now.get_val = function() {
