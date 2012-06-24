@@ -28,6 +28,7 @@ function Player() {
 	this.id = 0;
 	this.path = [];
 	this.startBox = null;
+	this.has_killed = 0;
 	
 	this.getPath = function() {
 		return this.path;
@@ -214,6 +215,11 @@ function isLegal(pawn_moved, from_id, to_id, value) {
                 return false;
         }
 
+	var inner_square = [42, 43, 44, 34, 24, 23, 22, 32, 33];
+
+	if((inner_square.findIndex(to_id) >= 0 ) && (players[player_id-1].has_killed == 0)) {
+		return false;
+	}
 //if from_box has 2 pawns - then gatti break 
 //isPairing should have .occupied = 2
 //this should make it one.
@@ -236,6 +242,7 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 			}
 			else 
 			{
+				players[player_id-1].has_killed = 1;
 				return true;
 			}
 
