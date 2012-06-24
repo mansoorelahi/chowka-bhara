@@ -86,8 +86,8 @@ function getBoxId(x, y) {
 }
 
 function getBoxDim(id) {
-	y = Math.floor(id%10)*80 + Math.floor(((id%10) - 1)*2);
-	x = Math.floor(id/10)*80 + Math.floor(((id/10) - 1)*2) + left_width;
+	y = Math.floor(id%10)*box_width + Math.floor(((id%10) - 1)*2);
+	x = Math.floor(id/10)*box_width + Math.floor(((id/10) - 1)*2) + left_width;
 
 	dim = {};
 	dim.x = x;
@@ -268,10 +268,11 @@ var value = 0;
 var uuid = 0;
 var free_hit = 0;
 var cb_hit = 0;
-var left_width = 100;
+var left_width = 0;
+var box_width = 75;
 
 window.onload = function () {
-	var r = Raphael("holder", 640, 640);	
+	var r = Raphael("holder", 500, 500);	
 //	r.rect(200, 20, 325, 325, 2);
 	var dragger = function () {
 			this.ox = this.type == "rect" ? this.attr("x") : this.attr("cx");
@@ -331,7 +332,7 @@ window.onload = function () {
 		for(j = 1; j <= 5; j++)
 		{
 			var box = new Box(); 
-			var rect = r.rect(left_width + i*80 + i * 2, j * 80 + j *2, 80, 80, 2);
+			var rect = r.rect(left_width + i * box_width + i * 2, j * box_width + j * 2, box_width, box_width, 2);
 			box.id = i*10 + j;
 			box.rect = rect;
 			
@@ -339,15 +340,15 @@ window.onload = function () {
 
 			if( ((i == 1 || i == 5 || i == 3) && (j == 3) || (j == 1 || j == 5 || j == 3) && (i == 3)))
 			{
-				var x1 = left_width + i*80 + i * 2;
-				var y1 = j * 80 + j *2;
-				var x2 = left_width + i*80 + i * 2 + 80;
-				var y2 = j * 80 + j *2 + 80;
+				var x1 = left_width + i*box_width + i * 2;
+				var y1 = j * box_width + j *2;
+				var x2 = left_width + i*box_width + i * 2 + box_width;
+				var y2 = j * box_width + j *2 + box_width;
 				var path_str = "M"+x1+" "+y1+"L"+x2+ " "+y2;
 				r.path(path_str);
 				
-				x1 = x1+80;
-				x2 = x2-80;
+				x1 = x1+box_width;
+				x2 = x2-box_width;
 				path_str = "M"+x1+" "+y1+"L"+x2+ " "+y2;
 				r.path(path_str);
 //for a 2 player game.. it shud be different
@@ -356,7 +357,7 @@ window.onload = function () {
 				{
 					count = count +1;
 						//create pawns
-						x1 = x1 - 80;
+						x1 = x1 - box_width;
 
 						var pawn_no = 0;
 						for(k = 1; k<= 2; k++)
@@ -399,16 +400,13 @@ window.onload = function () {
 }
 
 function getuuid() {
-	var uuidContent = document.getElementById('uuidDiv');
-	uuidContent.innerHTML = "Please wait till we fetch your player Id" ;
 	setTimeout(function() {
 		uuid = now.uuid;
-		uuidContent.innerHTML = "Your player Id is set " + uuid ;
+		now.distributeGamePlay("Thanks for your patience... " + now.name +
+			" is all set to begin play, Moderator starts first");
 		setTimeout(function() {
 			now.addPlayer(uuid);
-		//	console.log(now.players_arr);
 		},3000);
-
 	},2000);
 }
 
@@ -427,16 +425,15 @@ function play_game(){
 	}
 	now.get_val();
 	var myScore = document.getElementById('score');
-	myScore.innerHTML = "Dice is rolling on the server - good luck!!";
+	myScore.innerHTML = "Dice is rolling on the server - good luck!!!";
 	setTimeout(function() {
 			free_hit = 0;
 			var server_val = now.vali;
 			values.push(server_val);
-        		myScore.innerHTML =server_val;
+      myScore.innerHTML = "You rolled " + server_val;
 			if(server_val == 4 || server_val == 8) {
 				free_hit = 1;
+				now.distributeGamePlay(this.now.name + " gets a free hit - rolled " + server_val);
 			}
-
-
 	} ,3000);
 }
