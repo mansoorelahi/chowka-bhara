@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Chowka Bhara</title>
 		<link type="text/css" rel="stylesheet" href="main.css" media="screen">
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+		<script type="text/javascript" src="jquery.min.js"></script>
 		<script type="text/javascript" src="jquery.url.js"></script>
 		<script src="nowjs/now.js"></script> 
 		<script src="raphael.js" type="text/javascript" charset="utf-8"></script>
@@ -96,6 +96,7 @@
 		      			load_msg += " as moderator";
 		      			is_moderator = true;
 		      			$("#moderator_menu").show(400);
+		      			now.distributeGamePlay("Moderator starts the game by rolling the dice first, please wait till room is locked");
 		      		}
 		      		now.distributeMessage(load_msg);
 		      	});
@@ -113,6 +114,17 @@
 					$("#messages").html(new_message);
 					if(new_message.indexOf("joins the game") != -1 || new_message.indexOf("left the room") != -1)
 						refresh_users_list();					
+				};
+
+				// Receive messages from people in the same group
+				now.receiveGamePlay = function(message){
+					var new_message = "<span class='current_info'>" + message + "</span><br/>";
+					var old_message = $("#game_play_info").html();					
+					if(old_message != null){
+						old_message = old_message.replace("current_info", "old_info");
+						new_message += old_message;
+					}						
+					$("#game_play_info").html(new_message);					
 				};
 
 				// Send messages to people in the same group
@@ -133,6 +145,7 @@
 		<div id="backgroundPopup"></div>
 
 		<h2><center>Chowka Bhara - A Classical Indian Multiplayer Board Game</center></h2>
+		<p id='game_play_info' class="game_play"></p>
 		<div id="holder" class="holder"></div>
 		<div class="game_panel">
 			<div id='uuidDiv'></div>

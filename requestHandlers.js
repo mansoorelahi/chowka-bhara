@@ -80,6 +80,15 @@ function jqueryurljs(response) {
 	});
 }
 
+function jqueryminjs(response) {
+  console.log("cb_server:" + new Date() + ":Request handler 'jqueryminjs' was called.");
+	fs.readFile('jquery.min.js', function(err, data){
+		response.writeHead(200, {'Content-Type':'text/javascript'});
+		response.write(data);
+		response.end();
+	});
+}
+
 function jquerypopupjs(response) {
   console.log("cb_server:" + new Date() + ":Request handler 'jbquerypopupjs' was called.");
 	fs.readFile('jquery_popup.js', function(err, data){
@@ -91,6 +100,7 @@ function jquerypopupjs(response) {
 
 exports.raphaeljs = raphaeljs;
 exports.jqueryurljs = jqueryurljs;
+exports.jqueryminjs = jqueryminjs;
 exports.jquerypopupjs = jquerypopupjs;
 exports.cbjs = cbjs;
 exports.favicon = favicon;

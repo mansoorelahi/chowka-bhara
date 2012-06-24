@@ -7,6 +7,7 @@ handle["/"] = requestHandlers.index;
 handle["/cb.js"] = requestHandlers.cbjs;
 handle["/raphael.js"] = requestHandlers.raphaeljs;
 handle["/jquery.url.js"] = requestHandlers.jqueryurljs;
+handle["/jquery.min.js"] = requestHandlers.jqueryminjs;
 handle["/jquery_popup.js"] = requestHandlers.jquerypopupjs;
 handle["/main.css"] = requestHandlers.css;
 handle["/game"] = requestHandlers.game;
@@ -53,6 +54,12 @@ nowjs.on('newgroup', function (group) {
 everyone.now.distributeMessage = function(message){
   var group = nowjs.getGroup(this.now.serverRoom);
   group.now.receiveMessage(this.now.name, message);
+}
+
+// Send message to everyone in the users group
+everyone.now.distributeGamePlay = function(message){
+  var group = nowjs.getGroup(this.now.serverRoom);
+  group.now.receiveGamePlay(message);
 }
 
 everyone.now.changeRoom = function(newRoom, callback){
@@ -158,26 +165,36 @@ everyone.now.getRoomStatus = function(group_id, callback){
 }
 
 Array.prototype.findIndex = function(value){
-                var ctr = -1;
-                for (var i=0; i < this.length; i++) {
-                                if (this[i] == value) {
-                                                return i;
-                                }
-                }
-                return ctr;
-};
+  var ctr = -1;
+  for (var i=0; i < this.length; i++) {
+    if (this[i] == value) {
+      return i;
+    }
+  }
+  return ctr;
+}
 
 everyone.now.update = function(pawn_id, att, from_id, to_id) {
-	console.log(pawn_id);
-	console.log(att);
 	var group = nowjs.getGroup(this.now.serverRoom);
   group.now.updatePawn(pawn_id, att, from_id, to_id);
 }
 
-everyone.now.turn_change = function () {
-	var group = nowjs.getGroup(this.now.serverRoom);
+everyone.now.turn_change = function(){
+  var group = nowjs.getGroup(this.now.serverRoom);
+  var groupCount = 0;
+  group.count(function(count){
+    groupCount = count;
+  });
   group.now.turn = group.now.turn + 1;
-	group.now.turn = group.now.turn % 2;
+  group.now.turn = group.now.turn % groupCount;
+  this.now.distributeGamePlay(this.now.name + "'s turn completed");
+  var users = group['users'];
+  for(user in users){
+    if(group['users'][user]['now']['uuid'] == group.now.players_arr[group.now.turn]){
+      this.now.distributeGamePlay(group['users'][user]['now']['name'] + "'s turn to play");
+      break;
+    }
+  }
 }
 
 everyone.now.addPlayer = function(pid) {
@@ -187,13 +204,13 @@ everyone.now.addPlayer = function(pid) {
 }
 
 everyone.now.get_val = function() {
-//get array check here itself.
+  //get array check here itself.
 	var possible_values = [1,2,3,4,8];
 	_val = Math.floor(Math.random()*10);
-	console.log("recieved"  +  _val);
 	while(!(possible_values.findIndex(_val)>=0)) {
-		console.log("recieved"  +  _val);
 		_val = Math.floor(Math.random()*10);
 	}
 	everyone.now.vali = _val;
+  this.now.distributeGamePlay(this.now.name + " rolled " + everyone.now.vali +
+   ", " + this.now.name + " to move");
 }
