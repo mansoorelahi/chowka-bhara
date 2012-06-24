@@ -41,10 +41,8 @@ function Player() {
 }
 
 function getPlayerId(pawn_id) {
-	//console.log(pawn_id);
 	var player_id = 0;
 	var val = Math.floor(pawn_id/100);
-	//console.log(val);
 	switch(val) {
 	case 1:
 		player_id = 4;
@@ -83,7 +81,6 @@ function getBoxId(x, y) {
 	_i = Math.floor(x / 82);
 	_j = Math.floor(y/ 82);
 
-	//console.log(boxes[_i*10+_j]);
 	_id = _i*10+_j;
 	return _id
 }
@@ -100,15 +97,6 @@ function getBoxDim(id) {
 
 }
 
-/*
-function getBoxById(id) {
-	for(i = 0 ; i < boxes.length; i++){
-		if(boxes[i].id == id)
-			return boxes[i];
-	}
-	return null
-}
-*/
 function create_players(num) {
 //hard coding all the values
 	var player_1 = new Player();
@@ -140,9 +128,7 @@ function create_players(num) {
 
 function returnHome(pawn_id){
 	home_dim = getBoxDim(pawn_id.home);
-	//x = home_dim.x + 35 + Math.floor(Math.random()*30);
 	x = home_dim.x + (pawn_id.inc_id%10)*25;
-	//y = home_dim.y + 35 + Math.floor(Math.random()*30);
 	y = home_dim.y + (pawn_id.inc_id/10)*25;
 	var att = pawn_id.type == "rect" ? {x: x, y: y} : {cx: x , cy: y};
 	pawn_id.fig.attr(att);
@@ -225,17 +211,9 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 //this should make it one.
 //it will also solve attacking gatti problem
 
-	//console.log(from_box);
-	//console.log(from_indx);
-
-	//console.log(to_indx);
-	//console.log("inside islegal" + to_id);
-
-
 	if((to_indx - from_indx) == value){
 		if(!isPairing(pawn_moved, from_id, to_id))
 		{
-	//console.log("inside islegal" + to_id);
 			if(!isAttackSuccessful(pawn_moved, to_id))
 			{
 				return false;
@@ -252,13 +230,7 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 			return true;
 		}
 	}
-
-	//console.log(pawn_moved);
-	//console.log(from_box);
-	//console.log(to_box);
-	//console.log(value);
 	return false;
-
 }
 
 now.updatePawn = function(pawn_id, att, from_id, to_id) {
@@ -281,12 +253,6 @@ now.updatePawn = function(pawn_id, att, from_id, to_id) {
 		pawn.fig.attr(att);
 		boxes[from_id].occupied = 0;
                 boxes[to_id].occupied = 1;
-		//if(boxes.[to_id].occupied_player.length == 0) {
-		//	boxes.[to_id].occupied_player[0] = pawn_id;
-		//}
-                //if(boxes.[from_id].occupied_player.length == 1) {
-                //        boxes.[to_id].occupied_player.splice(0,1);
-                //}
 	}
 	is_pawn_moved = 0;
 }
@@ -337,7 +303,6 @@ window.onload = function () {
 					r.safari();
 					this_pawn.currentBox = from_id;
 					values.push(value);
-					//now.update(this.id, att, from_id);
 				}
 				else
 				{
@@ -349,17 +314,8 @@ window.onload = function () {
 						now.turn_change();
 						value = 0;
 					}
-					//else {
-					//	value = values.pop();
-					//}
 					boxes[from_id].occupied = 0;
 					boxes[to_id].occupied = 1;
-					//if(boxes.[to_id].occupied_player.length == 0) {
-					//	boxes.[to_id].occupied_player[0] = pawn_id;
-					//}
-					//if(boxes.[from_id].occupied_player.length == 1) {
-					//	boxes.[from_id].occupied_player.splice(0,1);
-					//}
 					//make the pawn moved to true so that it wont get moved again
 					is_pawn_moved = 1;
 					now.update(this.id, att, from_id, to_id);
@@ -398,7 +354,6 @@ window.onload = function () {
 			
 				if(!(i==3 && j==3))
 				{
-				//	box.occupied = 1;
 					count = count +1;
 						//create pawns
 						x1 = x1 - 80;
@@ -443,23 +398,6 @@ window.onload = function () {
 	getuuid();
 }
 
-function show_value(_val) {
-        vals = [1,2,3,4,8];
-console.log(_val);
-        window.value = 0;
-        if(vals.findIndex(_val)>=0)
-        {
-                window.value = window.value + _val;
-        }
-        else
-        {
-                play_game();
-        }
-        var myScore = document.getElementById('score');
-        score.innerHTML = window.value;
-        return value;
-}
-
 function getuuid() {
 	var uuidContent = document.getElementById('uuidDiv');
 	uuidContent.innerHTML = "Please wait till we fetch your player Id" ;
@@ -477,7 +415,6 @@ function getuuid() {
 function play_game(){
 	vals = [1,2,3,4,8];
 	window.value = 0;
-	//if(values.length > 0 && ( free_hit != 1 || cb_hit != 1)){
 	if(values.length > 0 && ( free_hit != 1)){
 		console.log("nothing free here");
 		return;
@@ -488,17 +425,13 @@ function play_game(){
 		console.log(now.players_arr);
 		return;
 	}
-	//_val = Math.floor(Math.random()*10);
-	//now.get_val();
 	now.get_val();
 	var myScore = document.getElementById('score');
 	myScore.innerHTML = "Dice is rolling on the server - good luck!!";
 	setTimeout(function() {
 			free_hit = 0;
-			//window.value = now.vali;
 			var server_val = now.vali;
 			values.push(server_val);
-			//window.value = values.pop();
         		myScore.innerHTML =server_val;
 			if(server_val == 4 || server_val == 8) {
 				free_hit = 1;
@@ -506,18 +439,4 @@ function play_game(){
 
 
 	} ,3000);
-	/*
-	if(vals.findIndex(_val)>=0)
-	{
-		window.value = window.value + _val;
-	}
-	else
-	{
-		play_game();
-	}
-	var myScore = document.getElementById('score');
-	console.log(myScore);
-	score.innerHTML = window.value;
-	return value;
-	*/
 }
