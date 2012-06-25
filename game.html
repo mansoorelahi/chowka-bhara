@@ -17,14 +17,14 @@
 			function refresh_users_list(){
 				// get all group users and populate the list
 	      now.getGroupUsers(function(users){
-	      	var users_list = "";
+	      	var users_list = "Remove player(s) from Game room : ";
 	      	$.each(users, function(key, user){
 	      		if(is_moderator && user != moderator){
 	      			now.getUserNameById(user, function(name){
 								users_list += "<a class='menu_item' href='#' user_id='" +
-								 user + "' id='" + user + "'>Remove " +
-		      			 name + "</a>";
-	      				$("#users_list").html(users_list);
+								 user + "' id='" + user + "'>Player " +
+		      			 name + "</a>&nbsp;&nbsp;&nbsp;";	      				
+		      			$("#users_list").html(users_list);
 							});	      			
 	      		}
 	      	});
@@ -35,11 +35,11 @@
 				var user_id = $(this).attr('user_id');
 				var link_id = '#' + $(this).attr('id');
 				now.getUserNameById(user_id, function(name){
-					now.distributeMessage(name + " was removed from this room");					
-				});
-				now.removeUserByModerator(user_id, function(user_id){
-					$(link_id).hide(400);
-				});
+					now.distributeMessage(name + " was removed from this room by Moderator");
+					now.removeUserByModerator(user_id, function(user_id){
+						$(link_id).hide(400);
+					});
+				});				
 			});
 
 			$("#leave_room").live('click', function(){
@@ -113,7 +113,12 @@
 						new_message += old_message;					
 					$("#messages").html(new_message);
 					if(new_message.indexOf("joins the game") != -1 || new_message.indexOf("left the room") != -1)
-						refresh_users_list();					
+						refresh_users_list();				
+					var removed_user = message.substring(0, message.indexOf(" was removed"));
+					if(removed_user == now.name){
+						alert("Oops... moderator has removed you from the game room");
+						window.location = "/";
+					}						
 				};
 
 				// Receive messages from people in the same group

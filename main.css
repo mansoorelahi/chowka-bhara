@@ -1,4 +1,9 @@
-body, h1, h2, h3, h4, h5, h6, p{
+body{
+	font-family: Arial, "MS Trebuchet", "Calibri";
+	font-size: 12px;
+}
+
+h1, h2, h3, h4, h5, h6, p{
 	font-family: Arial, "MS Trebuchet", "Calibri";
 }
 
@@ -93,8 +98,8 @@ body, h1, h2, h3, h4, h5, h6, p{
 	-webkit-border-radius: 5px;
 	font-size: 12px;
 	background-color: #aaa;
-	border: 3px solid #ddd;
-	padding: 5px;
+	border: 2px solid #ddd;
+	padding: 3px;
 	color: maroon;
 }
 
