@@ -9,7 +9,7 @@ h1, h2, h3, h4, h5, h6, p{
 
 .holder{
 	float: left;
-	width: 520px;
+	width: 550px;
 }
 
 .messages{
@@ -68,7 +68,7 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .game_panel{
-	width: 500px;
+	width: 450px;
 	float: right;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;

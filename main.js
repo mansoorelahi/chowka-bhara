@@ -112,7 +112,8 @@ everyone.now.userClientId = function(callback){
 }
 
 everyone.now.getGroupUsers = function(callback){
-  everyone.getUsers(function (users){ 
+  var group = nowjs.getGroup(this.now.serverRoom);
+  group.getUsers(function (users){ 
     callback(users);
   });
 }
@@ -160,7 +161,10 @@ everyone.now.groupCount = function(group_id, callback){
 }
 
 everyone.now.getRoomStatus = function(group_id, callback){
-  callback(nowjs.getGroup(group_id).locked);
+  if(group_id != undefined)
+    callback(nowjs.getGroup(group_id).locked);
+  else
+    callback(nowjs.getGroup(this.now.serverRoom).locked);
 }
 
 Array.prototype.findIndex = function(value){

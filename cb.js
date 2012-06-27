@@ -258,7 +258,7 @@ now.updatePawn = function(pawn_id, att, from_id, to_id) {
 }
 
 var is_pawn_moved = 0;
-var pawns= [];
+var pawns = [];
 var boxes = [];
 var safe_houses = [31,53, 35, 13, 33];
 var paired = [];
@@ -268,12 +268,12 @@ var value = 0;
 var uuid = 0;
 var free_hit = 0;
 var cb_hit = 0;
-var left_width = 0;
+var left_width = 100;
 var box_width = 75;
+var r;
 
 window.onload = function () {
-	var r = Raphael("holder", 500, 500);	
-//	r.rect(200, 20, 325, 325, 2);
+	r = Raphael("holder", 680, 580);	
 	var dragger = function () {
 			this.ox = this.type == "rect" ? this.attr("x") : this.attr("cx");
 			this.oy = this.type == "rect" ? this.attr("y") : this.attr("cy");
@@ -285,7 +285,7 @@ window.onload = function () {
 			r.safari();
 		},
 		up = function () {
-				this.animate({"fill-opacity": 0}, 500);
+				this.animate({"fill-opacity": .5}, 500);
 				from_id = getBoxId(this.ox, this.oy);
 				to_id = getBoxId(this.attrs.cx , this.attrs.cy);
 				if(from_id == to_id) {
@@ -356,46 +356,58 @@ window.onload = function () {
 				if(!(i==3 && j==3))
 				{
 					count = count +1;
-						//create pawns
-						x1 = x1 - box_width;
+					//create pawns
+					x1 = x1 - box_width;
 
-						var pawn_no = 0;
-						for(k = 1; k<= 2; k++)
+					var pawn_no = 0;
+					for(k = 1; k<= 2; k++)
+					{
+						for(p = 1; p <= 2; p++)
 						{
-							for(p = 1; p <= 2; p++)
-							{
-								pawn_no = k*10 + p;
-								pawn = new Pawn();
-								var fig = r.circle(x1 + k*25, y1+ p*25, 10);
-								pawn.fig = fig;
-								fig.id = count*100+pawn_no;
-								pawn.inc_id = pawn_no;
-								pawn.home = i*10 + j;
-								pawn.currentBox = i*10 + j;
-								pawn.player = count;
-								pawns.push(pawn);
-							}
+							pawn_no = k*10 + p;
+							pawn = new Pawn();
+							var fig = r.circle(x1 + k*25, y1+ p*25, 10);
+							pawn.fig = fig;
+							fig.id = count*100+pawn_no;
+							pawn.inc_id = pawn_no;
+							pawn.home = i*10 + j;
+							pawn.currentBox = i*10 + j;
+							pawn.player = count;
+							pawns.push(pawn);
 						}
+					}					
 				}
-
-
 			}
 		}
 	}
-	var count = 0;
+	var count = 0, legend_index = 0, legend_radius = 12;
 	for (var i = 0, ii = pawns.length; i < ii; i++) {
 			var color;
 			if(!(count%4))
 			{
 				color = Raphael.getColor();
 				count = 0;
+
+				// create pawns legend
+				if(legend_index == 0) {
+					r.circle(left_width + 50, 268, legend_radius).attr("fill", color);					
+				}
+				if(legend_index == 1){
+					r.circle(left_width + 268, 50, legend_radius).attr("fill", color);
+				}
+				if(legend_index == 2){
+					r.circle(left_width + 268, 485, legend_radius).attr("fill", color);					
+				} 
+				if(legend_index == 3){
+					r.circle(left_width + 485, 268, legend_radius).attr("fill", color);
+				}
+				legend_index += 1;
 			}
 			count = count + 1;
-			pawns[i].fig.attr({fill: color, stroke: color, "fill-opacity": 0, "stroke-width": 2, cursor: "move"});
+			pawns[i].fig.attr({fill: color, stroke: color, "fill-opacity": 1, "stroke-width": 2, cursor: "move"});
 			pawns[i].fig.drag(move, dragger, up);
 	}
 	create_players(4);
-
 	getuuid();
 }
 
@@ -406,8 +418,67 @@ function getuuid() {
 			" is all set to begin play, Moderator starts first");
 		setTimeout(function() {
 			now.addPlayer(uuid);
-		},3000);
-	},2000);
+			set_legends();
+		}, 2000);
+	}, 1000);
+}
+
+var user_x = 0;
+var legend_completed = false;
+function set_legends(){
+  var legend_name = 8, legend_font = 11;
+
+  console.log(user_x);
+  console.log(legend_completed);
+  now.getGroupUsers(function(group_users){
+  	var users = group_users;
+  	console.log(users);  
+	  if(users != undefined){
+			if(users.length > 0 && !legend_completed){
+			  now.getUserNameById(users[user_x], function(user_name){
+				  var name = user_name.substring(0, legend_name).toLowerCase();
+				  switch (user_x){
+				    case 0:
+				      r.text(left_width + 298, 50, name)
+				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});
+				      user_x += 1;
+				      break;
+				    case 1:         
+				      r.text(left_width + 485, 300, name)
+				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});
+				      user_x += 1;
+				      break;
+				    case 2:
+				      r.text(left_width + 298, 485, name)
+				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});  
+				      user_x += 1;
+				      break;
+				    case 3:
+				      r.text(left_width + 35, 300, name)
+				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});
+				      user_x += 1;
+				      legend_completed = true;
+				      break;
+				    default: break;
+				  }
+			  });
+			}
+			if(user_x < 4 && !legend_completed){
+		  	setTimeout(function(){
+		  		set_legends();
+		  	}, 3000);
+		  }
+		}else if(!legend_completed){
+			setTimeout(function(){
+	  		set_legends();
+	  	}, 3000);
+		}
+  });
+
+  // check room status if its locked or not
+  now.getRoomStatus(undefined, function(status){
+  	legend_completed = status;
+  });
 }
 
 function play_game(){
