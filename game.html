@@ -96,6 +96,8 @@
 		      			load_msg += " as moderator";
 		      			is_moderator = true;
 		      			$("#moderator_menu").show(400);
+		      			$("#role_dice").removeAttr("disabled");
+		      			$('#score').html("Please ROLL DICE ...");
 		      			now.distributeGamePlay("Moderator starts the game by rolling the dice first, please wait till room is locked");
 		      		}
 		      		now.distributeMessage(load_msg);
@@ -129,7 +131,19 @@
 						old_message = old_message.replace("current_info", "old_info");
 						new_message += old_message;
 					}						
-					$("#game_play_info").html(new_message);					
+					$("#game_play_info").html(new_message);
+					
+					// check dice enable
+					var expr = now.name + "'s turn to play";
+					if(message.indexOf("turn to play") != -1){
+						if(message.indexOf(expr) != -1){
+							$('#role_dice').removeAttr("disabled");
+							$('#score').html("Please ROLL DICE ...");
+						}else{
+							$('#role_dice').attr("disabled", "disabled");						
+							$('#score').html("Wait for your turn ...");
+						}
+					}
 				};
 
 				// Send messages to people in the same group
@@ -154,7 +168,7 @@
 		<div id="holder" class="holder"></div>
 		<div class="game_panel">
 			<div id='uuidDiv'></div>
-			<button id='butt' onClick="javascript:play_game()">ROLL DICE</button>
+			<button id='role_dice' disabled="disabled" onClick="javascript:play_game()">ROLL DICE</button>
 			<span id="score" class="score"></span>
 			<hr/>
 			<div class="messages">

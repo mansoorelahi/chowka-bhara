@@ -285,7 +285,7 @@ window.onload = function () {
 			r.safari();
 		},
 		up = function () {
-				this.animate({"fill-opacity": .5}, 500);
+				this.animate({"fill-opacity": 1}, 500);
 				from_id = getBoxId(this.ox, this.oy);
 				to_id = getBoxId(this.attrs.cx , this.attrs.cy);
 				if(from_id == to_id) {
@@ -326,7 +326,7 @@ window.onload = function () {
 		};
 
 	count = 0;
-//create the basic layout
+	//create the basic layout
 	for(i = 1 ; i <= 5 ; i++)
 	{
 		for(j = 1; j <= 5; j++)
@@ -351,8 +351,7 @@ window.onload = function () {
 				x2 = x2-box_width;
 				path_str = "M"+x1+" "+y1+"L"+x2+ " "+y2;
 				r.path(path_str);
-//for a 2 player game.. it shud be different
-			
+				//for a 2 player game.. it shud be different			
 				if(!(i==3 && j==3))
 				{
 					count = count +1;
@@ -404,7 +403,7 @@ window.onload = function () {
 				legend_index += 1;
 			}
 			count = count + 1;
-			pawns[i].fig.attr({fill: color, stroke: color, "fill-opacity": 1, "stroke-width": 2, cursor: "move"});
+			pawns[i].fig.attr({fill: color, stroke: color, "fill-opacity": 2, "stroke-width": 2, cursor: "move"});
 			pawns[i].fig.drag(move, dragger, up);
 	}
 	create_players(4);
@@ -428,12 +427,9 @@ var legend_completed = false;
 function set_legends(){
   var legend_name = 8, legend_font = 11;
 
-  console.log(user_x);
-  console.log(legend_completed);
   now.getGroupUsers(function(group_users){
   	var users = group_users;
-  	console.log(users);  
-	  if(users != undefined){
+  	if(users != undefined){
 			if(users.length > 0 && !legend_completed){
 			  now.getUserNameById(users[user_x], function(user_name){
 				  var name = user_name.substring(0, legend_name).toLowerCase();
@@ -488,7 +484,6 @@ function play_game(){
 		console.log("nothing free here");
 		return;
 	}
-	console.log(now.turn);
 	if(Number(uuid) != Number(now.players_arr[Number(now.turn)])) {
 		console.log("wrong uuid" + uuid );
 		console.log(now.players_arr);
@@ -497,6 +492,8 @@ function play_game(){
 	now.get_val();
 	var myScore = document.getElementById('score');
 	myScore.innerHTML = "Dice is rolling on the server - good luck!!!";
+	var myDice = document.getElementById('role_dice');
+	myDice.disabled = "true";
 	setTimeout(function() {
 			free_hit = 0;
 			var server_val = now.vali;
@@ -504,7 +501,8 @@ function play_game(){
       myScore.innerHTML = "You rolled " + server_val;
 			if(server_val == 4 || server_val == 8) {
 				free_hit = 1;
+				myDice.disabled = "";
 				now.distributeGamePlay(this.now.name + " gets a free hit - rolled " + server_val);
 			}
-	} ,3000);
+	}, 3000);
 }
