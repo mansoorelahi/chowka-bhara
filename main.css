@@ -170,3 +170,18 @@ h1, h2, h3, h4, h5, h6, p{
 .old_info{
 	color: grey;
 }
+
+.dice_stack{
+	padding: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	background-color: #aaa;
+	border: 2px solid #ddd;
+	color: maroon;
+	float: left;
+}
+
+.stack{
+	padding: 5px;
+	height: 30px;
+}

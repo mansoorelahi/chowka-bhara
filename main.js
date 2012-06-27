@@ -214,6 +214,11 @@ everyone.now.get_val = function() {
 		_val = Math.floor(Math.random()*10);
 	}
 	everyone.now.vali = _val;
+  var suffix = "";
+  if(everyone.now.vali == 4 || everyone.now.vali == 8)
+    suffix = " to Roll Again";
+  else
+    suffix = " to move";
   this.now.distributeGamePlay(this.now.name + " rolled " + everyone.now.vali +
-   ", " + this.now.name + " to move");
+   ", " + this.now.name + suffix);
 }

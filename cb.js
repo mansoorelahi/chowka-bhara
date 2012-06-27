@@ -477,10 +477,11 @@ function set_legends(){
   });
 }
 
+var prev_hit = 0;
 function play_game(){
 	vals = [1,2,3,4,8];
 	window.value = 0;
-	if(values.length > 0 && ( free_hit != 1)){
+	if(values.length > 0 && free_hit != 1){
 		console.log("nothing free here");
 		return;
 	}
@@ -494,6 +495,7 @@ function play_game(){
 	myScore.innerHTML = "Dice is rolling on the server - good luck!!!";
 	var myDice = document.getElementById('role_dice');
 	myDice.disabled = "true";
+	var myDiceStack = document.getElementById('dice_stack');
 	setTimeout(function() {
 			free_hit = 0;
 			var server_val = now.vali;
@@ -504,5 +506,18 @@ function play_game(){
 				myDice.disabled = "";
 				now.distributeGamePlay(this.now.name + " gets a free hit - rolled " + server_val);
 			}
+			if(values.length > 0 && free_hit == 1){
+				var ds = myDiceStack.innerHTML + "<div class='dice_stack'>" + server_val + "</div>"
+				myDiceStack.innerHTML = ds;
+			}else{
+				if(prev_hit == 0)
+					myDiceStack.innerHTML = "";
+				else{
+					var ds = myDiceStack.innerHTML + "<div class='dice_stack'>" + server_val + "</div>"
+					myDiceStack.innerHTML = ds;
+				}
+			}
+			prev_hit = free_hit;
+			
 	}, 3000);
 }

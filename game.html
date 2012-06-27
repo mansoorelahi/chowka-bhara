@@ -136,6 +136,7 @@
 					// check dice enable
 					var expr = now.name + "'s turn to play";
 					if(message.indexOf("turn to play") != -1){
+						$('#dice_stack').html("");
 						if(message.indexOf(expr) != -1){
 							$('#role_dice').removeAttr("disabled");
 							$('#score').html("Please ROLL DICE ...");
@@ -170,6 +171,7 @@
 			<div id='uuidDiv'></div>
 			<button id='role_dice' disabled="disabled" onClick="javascript:play_game()">ROLL DICE</button>
 			<span id="score" class="score"></span>
+			<p class='stack' id="dice_stack"></p>
 			<hr/>
 			<div class="messages">
 				<input type="text" id="text-input" maxlength="40"/>
