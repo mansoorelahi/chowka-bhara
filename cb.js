@@ -272,7 +272,7 @@ var left_width = 100;
 var box_width = 75;
 var r;
 
-window.onload = function () {
+function loadCB() {
 	r = Raphael("holder", 680, 580);	
 	var dragger = function () {
 			this.ox = this.type == "rect" ? this.attr("x") : this.attr("cx");
