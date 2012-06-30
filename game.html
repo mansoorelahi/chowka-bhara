@@ -84,27 +84,29 @@
 					now.changeRoom(room, function(success){
 						if(!success)
 							window.location = "/"; // room locked, redirect back
-					});
-					
-					// appoint a moderator for the current game room
-					now.groupModerator(function(moderator_id){
-						moderator = moderator_id;
-		      	now.userClientId(function(client_id){
-		      		client = client_id;
-		      		var load_msg = " joins the game";
-		      		if(client == moderator){
-		      			load_msg += " as moderator";
-		      			is_moderator = true;
-		      			$("#moderator_menu").show(400);
-		      			$("#role_dice").removeAttr("disabled");
-		      			$('#score').html("Please ROLL DICE ...");
-		      			now.distributeGamePlay("Moderator starts the game by rolling the dice first, please wait till room is locked");
-		      		}
-		      		now.distributeMessage(load_msg);
-		      	});
-		      });
+						else{
+							// appoint a moderator for the current game room
+							now.groupModerator(function(moderator_id){
+								moderator = moderator_id;
+				      	now.userClientId(function(client_id){
+				      		client = client_id;
+				      		var load_msg = " joins the game";
+				      		if(client == moderator){
+				      			load_msg += " as moderator";
+				      			is_moderator = true;
+				      			$("#moderator_menu").show(400);
+				      			$("#role_dice").removeAttr("disabled");
+				      			$('#score').html("Please ROLL DICE ...");
+				      			now.distributeGamePlay("Moderator starts the game by rolling the dice first, please wait till room is locked");
+				      		}
+				      		now.distributeMessage(load_msg);
+				      	});
+				      });
 
-		      refresh_users_list();	      	
+				      refresh_users_list();
+				      loadCB();      	
+			    	}
+					});
 				});
 				
 				// Receive messages from people in the same group
