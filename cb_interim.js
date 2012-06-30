@@ -154,18 +154,21 @@ function clear_from_box(from_box) {
                 return true;
         }
 
-	if(boxes[from_box].occupied_player.length == 1) {
-		boxes[from_box].occupied = 0;
-		boxes[from_box].occupied_player.splice(0,1);
+	if(window.boxes[from_box].occupied_player.length == 1) {
+		window.boxes[from_box].occupied = 0;
+		window.boxes[from_box].occupied_player.splice(0,1);
+		window.boxes[from_box].has_two = 0;
 	}
 }
 
-function isPairing(pawn_moved, from_box, to_box, r) {
+function isPairing(pawn_moved, from_box, to_box) {
 	var pawn1 = getPawnById(pawn_moved);
 	var pawn2 = getPawnById(boxes[to_box].occupied_player[0]);
+	console.log("inside");
+	console.log(boxes[to_box]);
 	if(pawn1.home == pawn2.home)
 	{
-		boxes[to_box].occupied_player.push(pawn_moved);
+//		boxes[to_box].occupied_player.push(pawn_moved);
 	
 		//create bond
 		var x1 = pawn1.fig.attrs.cx;
@@ -173,14 +176,21 @@ function isPairing(pawn_moved, from_box, to_box, r) {
 		var y1 = pawn1.fig.attrs.cy;
 		var y2 = pawn2.fig.attrs.cy;
 		var gatti_path_str = "M"+x1+" "+y1+"L"+x2+ " "+y2;
-		var gatti_fig = r.path(gatti_path_str);
+		var gatti_fig = window.r.path(gatti_path_str);
+
 		boxes[to_box].has_two = 1;
 
 		//update properties
 		pawn1.is_gatti = 1;
 		pawn2.is_gatti = 1;
-		pawn1.partner_pawn_id = pawn2.id;
-		pawn2.partner_pawn_id = pawn1.id;
+console.log(pawn2);
+console.log(pawn1);
+		pawn1.partner_pawn_id = pawn2.fig.id;
+		pawn2.partner_pawn_id = pawn1.fig.id;
+
+		pawn1.gatti_line = gatti_fig;
+		pawn2.gatti_line = gatti_fig;
+
 		return true;
 	}
 	else
@@ -201,13 +211,18 @@ function c_kododu(pawn_moved, to_box) {
 }
 
 function gatti_attack(from_box, to_box) {
+	//returnHome( getPawnById(boxes[to_box].occupied_player[0] );
+	//returnHome( getPawnById(boxes[to_box].occupied_player[1] );
 
+	
 	return false;
 
 }
 
 function isAttackSuccessful(pawn_moved, from_box, to_box) {
-
+	console.log("yaake!");
+	console.log(boxes[from_box]);	
+	console.log(boxes[to_box]);	
 	if(boxes[from_box].has_two == 1 && boxes[to_box].has_two == 1) {
 		return gatti_attack(from_box, to_box);
 	}
@@ -231,13 +246,16 @@ function isAttackSuccessful(pawn_moved, from_box, to_box) {
 }
 
 //clear from_box wherever its returning true
-function isLegal(pawn_moved, from_id, to_id, value, r, gatti = 0) {
+function isLegal(pawn_moved, from_id, to_id, value) {
+	gatti = typeof gatti !== 'undefined' ? gatti : 0;
 	var player_id = getPlayerId(pawn_moved);
 	var from_indx = players[player_id-1].path.findIndex(from_id);
 	var to_indx = players[player_id-1].path.findIndex(to_id);
 
+//gatti in the way - illegal - TODO
+
 //no attack and no pairing in safe house
-	if(safe_houses.findIndex(to_box)>=0) {
+	if(safe_houses.findIndex(to_id)>=0) {
                 console.log("_do_nothing");
 		//clear_from_box(from_box);
                 return true;
@@ -246,25 +264,28 @@ function isLegal(pawn_moved, from_id, to_id, value, r, gatti = 0) {
 	if(player_id != (now.turn + 1)) {
                 return false;
         }
+
 //if player has not killed anyone - he is not allowed in the inner square
 	var inner_square = [42, 43, 44, 34, 24, 23, 22, 32, 33];
 	if((inner_square.findIndex(to_id) >= 0 ) && (players[player_id-1].has_killed == 0)) {
 		return false;
 	}
-//value should be proper 
-	if((to_indx - from_indx) != value){
+
+	var pawn = getPawnById(pawn_moved);
+//value should be proper for normal pawn movement 
+	if(((to_indx - from_indx) != value) && (pawn.is_gatti != 1)){
 		return false;
 	}
 //only multiples of 2 allowed for gatti movement
-	var pawn = getPawnById(pawn_id);
-	if((gatti == 1) && (pawn.is_gatti == 1) && (value % 2 !=0)) {
+	if((pawn.is_gatti == 1) && (value % 2 !=0)) {
 		return false;
 	}
 
 //if the to_box is occupied - check for pairing and attack else its a legal move
-	if(boxes[to_box].occupied != 0) {	
+	if(window.boxes[to_id].occupied != 0) {	
 		//check if its a gatti
-		if(isPairing(pawn_moved, from_id, to_id, r))
+		console.log("here");
+		if(isPairing(pawn_moved, from_id, to_id))
 		{
 			//clear_from_box(from_box);
 			return true;
@@ -272,6 +293,7 @@ function isLegal(pawn_moved, from_id, to_id, value, r, gatti = 0) {
 		//if its not pairing - then it should be an attack
 		if(isAttackSuccessful(pawn_moved, from_id, to_id))
 		{
+			console.log("came here");
 			//clear_from_box(from_box);
 			players[player_id-1].has_killed = 1;
 			return true;
@@ -283,41 +305,60 @@ function isLegal(pawn_moved, from_id, to_id, value, r, gatti = 0) {
 	}
 	else
 	{
+		console.log("here - not good");
 		//clear the from_box - important!
 		//clear_from_box(from_box);
 
 		//instead of push - change the first element in occupied_player
-		boxes[to_box].occupied = 1;
-		boxes[to_box].occupied_player[0] = pawn_moved;
+		window.boxes[to_id].occupied = 1;
+		window.boxes[to_id].occupied_player[0] = pawn_moved;
+
+		if(pawn.is_gatti) {
+//			partner_pawn = getPawnById(this_pawn.partner_pawn_id);
+///			partner_pawn.fig.attr(att);
+			window.boxes[to_id].has_two = 1;
+		}
+				
+		console.log(window.boxes[to_id]);
 
 		return true;
 	}
 }
 
-now.updatePawn = function(pawn_id, att, from_id, to_id) {
-//if pawn is not moved already
-//change this to isLegal
+now.updatePawn = function(pawn_id, att, from_id, to_id, value) {
+//only if pawn not moved already
 	if(!is_pawn_moved)
 	{
 
 		var pawn = getPawnById(pawn_id);
-/*		//if pawns's currentBox is same as to_id - do nothing
-		if(pawn.currentBox == to_id) {
-			is_pawn_moved = 0;
-			return;
-		}
-		if(!isPairing(pawn_id, from_id, to_id))
-		{
-			if(isAttackSuccessful(pawn_id, to_id)) {
-				console.log("attack propogated");
+		var old_att = pawn.fig.attr;
+		pawn.fig.attr(att);
+		if(isLegal(pawn_id, from_id, to_id, value)) {
+			pawn.currentBox = to_id;
+			pawn.fig.attr(att);
+			clear_from_box(from_id);
+			if(pawn.is_gatti) {
+
+				var box_dim = getBoxDim(to_id);
+
+				var gatti_att = {cx: (box_dim.x + 35) - 15, cy: box_dim.y + 35}
+				pawn.fig.attr(gatti_att);
+
+				var partner_pawn = getPawnById(Number(this_pawn.partner_pawn_id));
+				var partner_att = {cx: (box_dim.x + 35) + 15, cy: box_dim.y + 35}
+				partner_pawn.fig.attr(partner_att);
+
+				var x2 = pawn.fig.attrs.cx + 30;
+				var gatti_path_str = "M"+pawn.fig.attrs.cx+" "+pawn.fig.attrs.cy+"L"+x2+ " "+pawn.fig.attrs.cy;
+				//var gatti_fig = window.r.path(gatti_path_str);
+				pawn.gatti_line.attr({path : gatti_path_str});	
+				partner_pawn.gatti_line.attr({path: gatti_path_str});	
+
 			}
 		}
-*/
-//		isLegal(pawn_id, from_id, to_id);
-		pawn.currentBox = to_id;
-		pawn.fig.attr(att);
-		boxes[from_id].occupied = 0;
-                boxes[to_id].occupied = 1;
+		else {
+			pawn.fig.attr(old_att);	
+		}
 	}
 	is_pawn_moved = 0;
 }
@@ -347,7 +388,22 @@ window.onload = function () {
 		move = function (dx, dy) {
 				var att = this.type == "rect" ? {x: this.ox + dx, y: this.oy + dy} : {cx: this.ox + dx, cy: this.oy + dy};
 				this.attr(att);
-			r.safari();
+				this_pawn = getPawnById(this.id);
+				if(this_pawn.is_gatti) {
+					var gatti_att = {cx: this.attrs.cx - 30, cy: this.attrs.cy}
+					this.attr(gatti_att);
+					var partner_pawn = getPawnById(Number(this_pawn.partner_pawn_id));
+					var partner_att = {cx: this.attrs.cx + 30, cy: this.attrs.cy}
+					partner_pawn.fig.attr(partner_att);
+
+					var x2 = this.attrs.cx + 30;
+					var gatti_path_str = "M"+this.attrs.cx+" "+this.attrs.cy+"L"+x2+ " "+this.attrs.cy;
+			                //var gatti_fig = window.r.path(gatti_path_str);
+					this_pawn.gatti_line.attr({path : gatti_path_str});	
+					partner_pawn.gatti_line.attr({path: gatti_path_str});	
+
+				}
+				r.safari();
 		},
 		up = function () {
 				this.animate({"fill-opacity": 1}, 500);
@@ -359,10 +415,12 @@ window.onload = function () {
 				if(from_id == to_id) {
 					var att =  this.type == "rect" ? {x: this.ox + dx, y: this.oy + dy} : {cx: this.attrs.cx, cy: this.attrs.cy};
                                         this_pawn.currentBox = to_id;
+					console.log("wtf!!");
 					now.update(this.id, att, from_id, to_id);
 					return;
 				}
 				window.value = values.pop();
+				console.log(boxes[to_id]);
 				if(!isLegal(this.id, from_id, to_id, value))
 				{
 					var att = this.type == "rect" ? {x: this.ox, y: this.oy} : {cx: this.ox , cy: this.oy};
@@ -370,25 +428,63 @@ window.onload = function () {
 					r.safari();
 					this_pawn.currentBox = from_id;
 					values.push(value);
+
+					console.log("illegal!!");
+
+					if(this_pawn.is_gatti) {
+						var gatti_att = {cx: this.attrs.ox - 30, cy: this.attrs.oy}
+						this.attr(gatti_att);
+						var partner_pawn = getPawnById(Number(this_pawn.partner_pawn_id));
+						var partner_att = {cx: this.attrs.ox + 30, cy: this.attrs.oy}
+						partner_pawn.fig.attr(partner_att);
+
+						var x2 = this.attrs.ox + 30;
+						var gatti_path_str = "M"+this.attrs.ox+" "+this.attrs.oy+"L"+x2+ " "+this.attrs.oy;
+						//var gatti_fig = window.r.path(gatti_path_str);
+						this_pawn.gatti_line.attr({path : gatti_path_str});	
+						partner_pawn.gatti_line.attr({path: gatti_path_str});	
+
+					}
+
+
 				}
 				else
 				{
 					var att =  this.type == "rect" ? {x: this.ox + dx, y: this.oy + dy} : {cx: this.attrs.cx, cy: this.attrs.cy};
 					this.attr(att);
 					//this_pawn.fig.attr(att); //not needed i guess
+					this_pawn = getPawnById(this.id);
+					if(this_pawn.is_gatti) {
+
+						var box_dim = getBoxDim(to_id);
+
+						var gatti_att = {cx: (box_dim.x + 35) - 15, cy: box_dim.y + 35}
+						this.attr(gatti_att);
+
+						var partner_pawn = getPawnById(Number(this_pawn.partner_pawn_id));
+						var partner_att = {cx: (box_dim.x + 35) + 15, cy: box_dim.y + 35}
+						partner_pawn.fig.attr(partner_att);
+
+						var x2 = this.attrs.cx + 30;
+						var gatti_path_str = "M"+this.attrs.cx+" "+this.attrs.cy+"L"+x2+ " "+this.attrs.cy;
+						//var gatti_fig = window.r.path(gatti_path_str);
+						this_pawn.gatti_line.attr({path : gatti_path_str});	
+						partner_pawn.gatti_line.attr({path: gatti_path_str});	
+
+					}
+
 					this_pawn.currentBox = to_id;
-					boxes[to_id].occupied = 1;
+
+					clear_from_box(from_id);
+					//make the pawn moved to true so that it wont get moved again
+					is_pawn_moved = 1;
+					now.update(this.id, att, from_id, to_id, value);
 
 					if(values.length <=0) {
 						values = [];
 						now.turn_change();
 						value = 0;
 					}
-					clear_from_box(from_id);
-					//make the pawn moved to true so that it wont get moved again
-					is_pawn_moved = 1;
-					now.update(this.id, att, from_id, to_id);
-				console.log("coming");
 				}
 			
 		};
