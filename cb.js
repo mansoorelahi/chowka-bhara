@@ -389,16 +389,24 @@ function loadCB() {
 
 				// create pawns legend
 				if(legend_index == 0) {
-					r.circle(left_width + 50, 268, legend_radius).attr("fill", color);					
+					r.circle(left_width + 50, 268, legend_radius).attr("fill", color);		
+					l_text_l = r.text(left_width + 25, 300, "")
+				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});			
 				}
 				if(legend_index == 1){
 					r.circle(left_width + 268, 50, legend_radius).attr("fill", color);
+					l_text_t = r.text(left_width + 310, 50, "")
+				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});
 				}
 				if(legend_index == 2){
-					r.circle(left_width + 268, 485, legend_radius).attr("fill", color);					
+					r.circle(left_width + 268, 485, legend_radius).attr("fill", color);			
+					l_text_b = r.text(left_width + 310, 485, "")
+				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});  		
 				} 
 				if(legend_index == 3){
 					r.circle(left_width + 485, 268, legend_radius).attr("fill", color);
+					l_text_r = r.text(left_width + 490, 300, "")
+				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});				      
 				}
 				legend_index += 1;
 			}
@@ -424,34 +432,30 @@ function getuuid() {
 
 var user_x = 0;
 var legend_completed = false;
+var l_text_t, l_text_b, l_text_l, l_text_r;
+var legend_name = 8, legend_font = 12;
 function set_legends(){
-  var legend_name = 8, legend_font = 11;
-
   now.getGroupUsers(function(group_users){
   	var users = group_users;
   	if(users != undefined){
-			if(users.length > 0 && !legend_completed){
+  		if(users.length > 0 && !legend_completed){
 			  now.getUserNameById(users[user_x], function(user_name){
-				  var name = user_name.substring(0, legend_name).toLowerCase();
+			  	var name = user_name.substring(0, legend_name).toLowerCase();
 				  switch (user_x){
 				    case 0:
-				      r.text(left_width + 298, 50, name)
-				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});
+				      l_text_t.attr("text", name);
 				      user_x += 1;
 				      break;
 				    case 1:         
-				      r.text(left_width + 485, 300, name)
-				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});
+				      l_text_r.attr("text", name);
 				      user_x += 1;
 				      break;
 				    case 2:
-				      r.text(left_width + 298, 485, name)
-				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});  
+				      l_text_b.attr("text", name);
 				      user_x += 1;
 				      break;
 				    case 3:
-				      r.text(left_width + 35, 300, name)
-				        .attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});
+				      l_text_l.attr("text", name);
 				      user_x += 1;
 				      legend_completed = true;
 				      break;
@@ -475,6 +479,20 @@ function set_legends(){
   now.getRoomStatus(undefined, function(status){
   	legend_completed = status;
   });
+}
+
+function reset_legends(){
+	var loading_name = "";
+	legend_completed = false; user_x = 0;
+	if(l_text_t != undefined)
+		l_text_t.attr("text", loading_name);
+	if(l_text_r != undefined)
+		l_text_r.attr("text", loading_name);
+	if(l_text_b != undefined)
+		l_text_b.attr("text", loading_name);
+	if(l_text_l != undefined)
+		l_text_l.attr("text", loading_name);
+	set_legends();
 }
 
 var prev_hit = 0;

@@ -17,7 +17,7 @@
 			function refresh_users_list(){
 				// get all group users and populate the list
 	      now.getGroupUsers(function(users){
-	      	var users_list = "Remove player(s) from Game room : ";
+	      	var users_list = "Remove player(s) : ";
 	      	$.each(users, function(key, user){
 	      		if(is_moderator && user != moderator){
 	      			now.getUserNameById(user, function(name){
@@ -35,7 +35,7 @@
 				var user_id = $(this).attr('user_id');
 				var link_id = '#' + $(this).attr('id');
 				now.getUserNameById(user_id, function(name){
-					now.distributeMessage(name + " was removed from this room by Moderator");
+					now.distributeGamePlay(name + " was removed from this room by Moderator");
 					now.removeUserByModerator(user_id, function(user_id){
 						$(link_id).hide(400);
 					});
@@ -43,7 +43,7 @@
 			});
 
 			$("#leave_room").live('click', function(){
-				now.distributeMessage(" left the room");
+				now.distributeGamePlay(now.name + " left the room");
 				now.leaveRoom(function(){
 					window.location = "/";
 				});
@@ -54,7 +54,7 @@
 				now.lockRoom(function(is_locked){
 					if(is_locked){
 						$(link_id).hide(400);
-						now.distributeMessage(" locked the room");
+						now.distributeGamePlay(now.name + " locked the room");
 					}else{
 						$('#menu_messages').html("Not enough players to Lock the room<br/>");
 						setTimeout(function(){
@@ -90,21 +90,21 @@
 								moderator = moderator_id;
 				      	now.userClientId(function(client_id){
 				      		client = client_id;
-				      		var load_msg = " joins the game";
+				      		var load_msg = now.name + " joins the game";
 				      		if(client == moderator){
 				      			load_msg += " as moderator";
 				      			is_moderator = true;
 				      			$("#moderator_menu").show(400);
 				      			$("#role_dice").removeAttr("disabled");
 				      			$('#score').html("Please ROLL DICE ...");
-				      			now.distributeGamePlay("Moderator starts the game by rolling the dice first, please wait till room is locked");
+				      			now.distributeGamePlay(now.name + " starts the game by rolling the dice first, please wait till room is locked");
 				      		}
-				      		now.distributeMessage(load_msg);
+				      		now.distributeGamePlay(load_msg);
+						      refresh_users_list();
+						      loadCB();      	
 				      	});
 				      });
 
-				      refresh_users_list();
-				      loadCB();      	
 			    	}
 					});
 				});
@@ -115,26 +115,36 @@
 					var old_message = $("#messages").html();
 					if(old_message != null)
 						new_message += old_message;					
-					$("#messages").html(new_message);
-					if(new_message.indexOf("joins the game") != -1 || new_message.indexOf("left the room") != -1)
-						refresh_users_list();				
-					var removed_user = message.substring(0, message.indexOf(" was removed"));
-					if(removed_user == now.name){
-						alert("Oops... moderator has removed you from the game room");
-						window.location = "/";
-					}						
+					$("#messages").html(new_message);											
 				};
 
 				// Receive messages from people in the same group
+				var prev_message = "";
 				now.receiveGamePlay = function(message){
 					var new_message = "<span class='current_info'>" + message + "</span><br/>";
 					var old_message = $("#game_play_info").html();					
 					if(old_message != null){
 						old_message = old_message.replace("current_info", "old_info");
 						new_message += old_message;
-					}						
-					$("#game_play_info").html(new_message);
+					}
 					
+					if(message.indexOf(prev_message) == -1){
+						$("#game_play_info").html(new_message);
+						if(message.indexOf("disconnected from Room") != -1 || message.indexOf("left the room") != -1){
+							reset_legends();
+							refresh_users_list();
+						}
+					}
+					
+					if(message.indexOf("joins the game") != -1)
+						refresh_users_list();				
+
+					var removed_user = message.substring(0, message.indexOf(" was removed"));
+					if(removed_user == now.name){
+						alert("Oops... moderator has removed you from the game room");
+						window.location = "/";
+					}
+
 					// check dice enable
 					var expr = now.name + "'s turn to play";
 					if(message.indexOf("turn to play") != -1){
@@ -147,10 +157,11 @@
 							$('#score').html("Wait for your turn ...");
 						}
 					}
+					prev_message = message;
 				};
 
 				// Send messages to people in the same group
-				$("#send-button").click(function(){
+				$("#send_message").submit(function(){
 					now.distributeMessage($("#text-input").val());
 					$("#text-input").val("");
 				});				
@@ -166,7 +177,8 @@
 		</div>
 		<div id="backgroundPopup"></div>
 
-		<h2><center>Chowka Bhara - A Classical Indian Multiplayer Board Game</center></h2>
+		<font size='3'><center>Chowka Bhara - A Classical Indian Multiplayer Board Game</center></font>
+		<center><i>( Do not press Refresh or back button after once the game starts )</i></center>
 		<p id='game_play_info' class="game_play"></p>
 		<div id="holder" class="holder"></div>
 		<div class="game_panel">
@@ -176,8 +188,10 @@
 			<p class='stack' id="dice_stack"></p>
 			<hr/>
 			<div class="messages">
-				<input type="text" id="text-input" maxlength="40"/>
-				<input type="submit" value="Send message" id="send-button"/>
+				<form name='send_message' id='send_message' action='/'>
+					<input type="text" id="text-input" maxlength="40"/>
+					<input type="submit" value="Send message" id="send-button"/>
+				</form>
 				<p id="messages"></p>
 			</div>
 			<hr/>

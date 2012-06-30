@@ -32,17 +32,17 @@ function log_prefix(){
 }
 
 everyone.connected(function(){
-	//to be got from mongoDB getNotifications
 	this.now.counter = 0;
-	//mongo DB per connection
 	console.log(log_prefix() + "User client id is " + this.user.clientId);
 	this.now.uuid = ++count;
   this.now.moderator = false;
 });
 
 everyone.disconnected(function(){
-  nowjs.getGroup(this.now.serverRoom).locked = false;
-	console.log(log_prefix() + this.now.name + " disconnected from the Room " + this.now.serverRoom);
+  var group = nowjs.getGroup(this.now.serverRoom)
+  group.locked = false;
+  group.now.distributeGamePlay(this.now.name + " disconnected from Room " + this.now.serverRoom);
+  group.now.players_arr.pop(this.now.uuid);
 });
 
 nowjs.on('newgroup', function (group) {
@@ -137,8 +137,9 @@ everyone.now.getUserNameById = function(user_id, callback){
 }
 
 everyone.now.leaveRoom = function(callback){
-  nowjs.getGroup(this.now.serverRoom).locked = false;
-  nowjs.getGroup(this.now.serverRoom).removeUser(this.user.clientId);
+  var group = nowjs.getGroup(this.now.serverRoom)
+  group.locked = false;
+  group.removeUser(this.user.clientId);
   callback();
 }
 
