@@ -164,6 +164,7 @@
 				$("#send_message").submit(function(){
 					now.distributeMessage($("#text-input").val());
 					$("#text-input").val("");
+					return false;
 				});				
 			});
 		</script>
