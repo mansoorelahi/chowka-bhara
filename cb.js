@@ -490,10 +490,12 @@ function loadCB() {
 					is_pawn_moved = 1;
 					now.update(this.id, att, from_id, to_id, value);
 
-					if(values.length <=0) {
+					if(values.length <= 0) {
 						values = [];
 						now.turn_change();
 						value = 0;
+					}else{
+						updateDiceStackUI();
 					}
 				}
 			
@@ -710,4 +712,15 @@ function play_game(){
 			prev_hit = free_hit;
 			
 	}, 3000);
+}
+
+function updateDiceStackUI(){
+	var myDiceStack = document.getElementById('dice_stack');
+	var ds = "";
+	var ds_index = values.length;
+	while(ds_index > 0){
+		ds += "<div class='dice_stack'>" + values[ds_index - 1] + "</div>"
+		ds_index -= 1;
+	}
+	myDiceStack.innerHTML = ds;
 }
