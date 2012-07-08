@@ -363,6 +363,18 @@ now.updatePawn = function(pawn_id, att, from_id, to_id, value) {
 	is_pawn_moved = 0;
 }
 
+function spliceMe(pawn_moved, from_id, to_id){
+	var player_id = getPlayerId(pawn_moved);
+	var move = (players[player_id-1].path.findIndex(to_id) - players[player_id-1].path.findIndex(from_id));
+	var spliced_val = [];
+	for (v in values){
+		if(move == values[v]){
+			spliced_val = values.splice(v, 1);
+			window.value = spliced_val[0];
+		}
+	}
+}
+
 var is_pawn_moved = 0;
 var pawns = [];
 var boxes = [];
@@ -419,7 +431,7 @@ function loadCB() {
 					now.update(this.id, att, from_id, to_id);
 					return;
 				}
-				window.value = values.pop();
+				spliceMe(this.id, from_id, to_id);
 				console.log(boxes[to_id]);
 				if(!isLegal(this.id, from_id, to_id, value))
 				{
@@ -427,8 +439,6 @@ function loadCB() {
 					this.attr(att);
 					r.safari();
 					this_pawn.currentBox = from_id;
-					values.push(value);
-
 					console.log("illegal!!");
 
 					if(this_pawn.is_gatti) {
