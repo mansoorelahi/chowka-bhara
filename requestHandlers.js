@@ -19,7 +19,7 @@ function loading_image(response) {
 
 function README(response) {
   console.log("cb_server:" + new Date() + ":Request handler 'README' was called.");
-	fs.readFile('README', function(err, data){
+	fs.readFile('readme.html', function(err, data){
 		response.writeHead(200, {'Content-Type':'text/html'});
 		response.write(data);
 		response.end();
