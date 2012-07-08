@@ -670,7 +670,6 @@ function reset_legends(){
 
 var prev_hit = 0;
 function play_game(){
-	vals = [1,2,3,4,8];
 	window.value = 0;
 	if(values.length > 0 && free_hit != 1){
 		console.log("nothing free here");
@@ -681,7 +680,7 @@ function play_game(){
 		console.log(now.players_arr);
 		return;
 	}
-	now.get_val();
+	now.get_val(values);
 	var myScore = document.getElementById('score');
 	myScore.innerHTML = "Dice is rolling on the server - good luck!!!";
 	var myDice = document.getElementById('role_dice');

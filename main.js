@@ -207,9 +207,29 @@ everyone.now.addPlayer = function(pid) {
 	console.log(group.now.players_arr);
 }
 
-everyone.now.get_val = function() {
+everyone.now.get_val = function(values) {
   //get array check here itself.
 	var possible_values = [1,2,3,4,8];
+  
+  // dice restrictions for a 4 and an 8
+  var count_4 = 0; var count_8 = 0;
+  for(v in values){
+    if(values[v] == 4)
+      count_4 += 1;
+    if(values[v] == 8)
+      count_8 += 1;
+  }
+  if(count_4 >= 2){
+    var rem_index = values.indexOf(4);
+    if(rem_index != -1)
+      possible_values.splice(rem_index, 1);
+  }
+  if(count_8 >= 2){
+    var rem_index = values.indexOf(8);
+    if(rem_index != -1)
+      possible_values.splice(rem_index, 1);
+  }
+
 	_val = Math.floor(Math.random()*10);
 	while(!(possible_values.findIndex(_val)>=0)) {
 		_val = Math.floor(Math.random()*10);
