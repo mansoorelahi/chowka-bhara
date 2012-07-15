@@ -115,7 +115,12 @@
 					var old_message = $("#messages").html();
 					if(old_message != null)
 						new_message += old_message;					
-					$("#messages").html(new_message);											
+					// swap players here - killing the client side aaaargh
+					if(message.indexOf("disconnected pa_index") != -1){						
+						reset_player(message[message.indexOf("=") + 1]);
+					}
+					else
+						$("#messages").html(new_message);		
 				};
 
 				// Receive messages from people in the same group
@@ -131,7 +136,6 @@
 					if(message.indexOf(prev_message) == -1){
 						$("#game_play_info").html(new_message);
 						if(message.indexOf("disconnected from Room") != -1 || message.indexOf("left the room") != -1){
-							reset_legends();
 							refresh_users_list();
 						}
 					}

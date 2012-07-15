@@ -39,10 +39,23 @@ everyone.connected(function(){
 });
 
 everyone.disconnected(function(){
-  var group = nowjs.getGroup(this.now.serverRoom)
-  group.locked = false;
-  group.now.distributeGamePlay(this.now.name + " disconnected from Room " + this.now.serverRoom);
-  group.now.players_arr.pop(this.now.uuid);
+  var group = nowjs.getGroup(this.now.serverRoom);
+  var pa_index = group.now.players_arr.indexOf(this.now.uuid); 
+  if(pa_index != -1){ 
+    group.now.players_arr[pa_index] = -1;
+    group.now.distributeMessage('disconnected pa_index =' + pa_index);  
+  }
+
+  // check turn change for absconders
+  var users = group['users'];
+  for(user in users){
+    if(users[user]['now']['moderator']){
+      users[user]['now'].turn_change();  
+      group.locked = false;
+      group.now.distributeGamePlay(this.now.name + " disconnected from Room " + this.now.serverRoom);
+      break;
+    }
+  }  
 });
 
 nowjs.on('newgroup', function (group) {
@@ -90,6 +103,7 @@ everyone.now.changeRoom = function(newRoom, callback){
 
     // make the first player, moderator of the current group
     if(groupCount == 0){
+      newGroup.now.players_arr = []; // flushing old stuff
       newGroup.moderator = this.user.clientId;
       this.now.moderator = true;
       console.log(log_prefix() + this.now.name + " is the moderator of Room " + this.now.serverRoom);
@@ -185,17 +199,28 @@ everyone.now.update = function(pawn_id, att, from_id, to_id) {
 
 everyone.now.turn_change = function(){
   var group = nowjs.getGroup(this.now.serverRoom);
-  var groupCount = 0;
-  group.count(function(count){
-    groupCount = count;
+  var current_player = this.now;
+  group.count(function (count) {
+    var removed_players = 0;
+    for(var x in group.now.players_arr){
+      if(group.now.players_arr[x] == -1)
+        removed_players += 1;
+    }
+    var groupCount = count + removed_players;
+    group.now.turn = (group.now.turn + 1) % groupCount;
+    while(group.now.players_arr[group.now.turn] == -1){
+      group.now.turn = (group.now.turn + 1) % groupCount;
+    }
+    send_turn_change_info(group, current_player);    
   });
-  group.now.turn = group.now.turn + 1;
-  group.now.turn = group.now.turn % groupCount;
-  this.now.distributeGamePlay(this.now.name + "'s turn completed");
+}
+
+function send_turn_change_info(group, current_player){
+  current_player.distributeGamePlay(current_player.name + "'s turn completed");
   var users = group['users'];
-  for(user in users){
-    if(group['users'][user]['now']['uuid'] == group.now.players_arr[group.now.turn]){
-      this.now.distributeGamePlay(group['users'][user]['now']['name'] + "'s turn to play");
+  for(var user in users){
+    if(users[user]['now']['uuid'] == group.now.players_arr[group.now.turn]){
+      current_player.distributeGamePlay(users[user]['now']['name'] + "'s turn to play");
       break;
     }
   }
@@ -212,28 +237,26 @@ everyone.now.get_val = function(values) {
 	var possible_values = [1,2,3,4,8];
   
   // dice restrictions for a 4 and an 8
-  var count_4 = 0; var count_8 = 0;
-  for(v in values){
-    if(values[v] == 4)
+  var count_4 = 0, count_8 = 0, v_index = values.length;
+  while(v_index > 0){
+    if(values[v_index] == 4)
       count_4 += 1;
-    if(values[v] == 8)
+    if(values[v_index] == 8)
       count_8 += 1;
+    v_index -= 1;
   }
   if(count_4 >= 2){
-    var rem_index = values.indexOf(4);
+    var rem_index = possible_values.indexOf(4);
     if(rem_index != -1)
       possible_values.splice(rem_index, 1);
   }
   if(count_8 >= 2){
-    var rem_index = values.indexOf(8);
+    var rem_index = possible_values.indexOf(8);
     if(rem_index != -1)
       possible_values.splice(rem_index, 1);
   }
 
-	_val = Math.floor(Math.random()*10);
-	while(!(possible_values.findIndex(_val)>=0)) {
-		_val = Math.floor(Math.random()*10);
-	}
+	_val = possible_values[Math.floor(Math.random() * possible_values.length)];
 	everyone.now.vali = _val;
   var suffix = "";
   if(everyone.now.vali == 4 || everyone.now.vali == 8)

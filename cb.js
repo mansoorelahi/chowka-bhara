@@ -371,6 +371,7 @@ function spliceMe(pawn_moved, from_id, to_id){
 		if(move == values[v]){
 			spliced_val = values.splice(v, 1);
 			window.value = spliced_val[0];
+			break;
 		}
 	}
 }
@@ -389,6 +390,8 @@ var cb_hit = 0;
 var left_width = 100;
 var box_width = 75;
 var r;
+var kharab_player_id = [4, 1, 3, 2];
+var kharab = 0;
 
 function loadCB() {
 	r = Raphael("holder", 680, 580);	
@@ -534,7 +537,7 @@ function loadCB() {
 					//create pawns
 					x1 = x1 - box_width;
 
-					var pawn_no = 0;
+					var pawn_no = 0;					
 					for(k = 1; k<= 2; k++)
 					{
 						for(p = 1; p <= 2; p++)
@@ -547,10 +550,11 @@ function loadCB() {
 							pawn.inc_id = pawn_no;
 							pawn.home = i*10 + j;
 							pawn.currentBox = i*10 + j;
-							pawn.player = count;
+							pawn.player = kharab_player_id[kharab];
 							pawns.push(pawn);
 						}
 					}					
+					kharab += 1;
 				}
 			}
 		}
@@ -656,32 +660,13 @@ function set_legends(){
   });
 }
 
-function reset_legends(){
-	var loading_name = "";
-	legend_completed = false; user_x = 0;
-	if(l_text_t != undefined)
-		l_text_t.attr("text", loading_name);
-	if(l_text_r != undefined)
-		l_text_r.attr("text", loading_name);
-	if(l_text_b != undefined)
-		l_text_b.attr("text", loading_name);
-	if(l_text_l != undefined)
-		l_text_l.attr("text", loading_name);
-	set_legends();
-}
-
 var prev_hit = 0;
 function play_game(){
 	window.value = 0;
 	if(values.length > 0 && free_hit != 1){
 		console.log("nothing free here");
 		return;
-	}
-	if(Number(uuid) != Number(now.players_arr[Number(now.turn)])) {
-		console.log("wrong uuid" + uuid );
-		console.log(now.players_arr);
-		return;
-	}
+	}	
 	now.get_val(values);
 	var myScore = document.getElementById('score');
 	myScore.innerHTML = "Dice is rolling on the server - good luck!!!";
@@ -723,4 +708,12 @@ function updateDiceStackUI(){
 		ds_index -= 1;
 	}
 	myDiceStack.innerHTML = ds;
+}
+
+function reset_player(pa_index){	
+	for(var i = 0; i < pawns.length; i++){
+		if(pawns[i].player == parseInt(pa_index) + 1){
+			returnHome(getPawnById(pawns[i].fig.id));
+		}
+	}
 }
