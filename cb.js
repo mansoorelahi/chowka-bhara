@@ -387,14 +387,14 @@ var value = 0;
 var uuid = 0;
 var free_hit = 0;
 var cb_hit = 0;
-var left_width = 60;
-var box_width = 75;
+var left_width = 0;
+var box_width = 70;
 var r;
 var kharab_player_id = [4, 1, 3, 2];
 var kharab = 0;
 
 function loadCB() {
-	r = Raphael("holder", 680, 580);	
+	r = Raphael("holder", 450, 580);	
 	var dragger = function () {
 			this.ox = this.type == "rect" ? this.attr("x") : this.attr("cx");
 			this.oy = this.type == "rect" ? this.attr("y") : this.attr("cy");
