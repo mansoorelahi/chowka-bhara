@@ -7,9 +7,14 @@ h1, h2, h3, h4, h5, h6, p{
 	font-family: Arial, "MS Trebuchet", "Calibri";
 }
 
+.game_heading{
+	height: 35px;
+	background-color: #13354f;
+	color: #fff;
+}
+
 .holder{
 	float: left;
-	width: 625px;
 }
 
 .messages{
@@ -27,53 +32,62 @@ h1, h2, h3, h4, h5, h6, p{
 	padding: 20px;
 }
 
+.features{
+	font-size: 16px;
+	line-height: 35px;
+}
+
 .room_box{
+	text-align: center;
+	line-height: 15px;
+	font-size: 12px;
+	border: 2px solid #ddd;
+	color: maroon;
+	padding: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	background-color: #abc;
-	font-size: 14px;
-	padding: 10px;
 	float: left;
-	height: 80px;
-	width: 80px;
-	text-align: center;
-	line-height: 25px;
-	border: 3px solid #ddd;
-	color: maroon;
+	height: 50px;
+	width: 70px;
 	font-weight: bold;
 }
 
-.box{}
-
-.box_spacer{
-	height: 80px;
-	width: 20px;
+.server_room{
 	float: left;
+	padding: 5px;
+	width: 72%;
 }
 
-.box a{
+.server_room a{
 	text-decoration: none;
 }
 
-.box a:hover{
+.server_room a:hover{
 	color: #fff;
 	background-color: grey;
 }
 
-.server_room{
-	font-size: 16px;
+.box{
+	height: 100px;
+	width: 10%;
+	float: left;
 	padding: 10px;
-	height: 150px;
+}
 
+.box_spacer{
+	height: 50px;
+	width: 20px;
+	float: left;
 }
 
 .game_panel{
-	width: 450px;
+	width: 250px;
 	float: right;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	background-color: #abc;
-	padding: 10px;
+	padding: 5px;
 }
 
 .moderator_menu{
@@ -81,7 +95,7 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .menu{
-	padding: 10px;
+	padding: 5px;
 }
 
 .menu a{
@@ -89,18 +103,13 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .menu a:hover{
-	color: #fff;
-	background-color: grey;
+	color: #ccc;
 }
 
 .menu_item{
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	font-size: 12px;
-	background-color: #aaa;
-	border: 2px solid #ddd;
+	font-size: 11px;
 	padding: 3px;
-	color: maroon;
+	color: #fff;
 }
 
 .score{
@@ -172,7 +181,7 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .dice_stack{
-	padding: 5px;
+	padding: 2px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	background-color: #aaa;
@@ -182,6 +191,6 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .stack{
-	padding: 5px;
-	height: 30px;
+	padding: 2px;
+	height: 20px;
 }

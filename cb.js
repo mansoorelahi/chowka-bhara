@@ -387,7 +387,7 @@ var value = 0;
 var uuid = 0;
 var free_hit = 0;
 var cb_hit = 0;
-var left_width = 100;
+var left_width = 60;
 var box_width = 75;
 var r;
 var kharab_player_id = [4, 1, 3, 2];
@@ -669,7 +669,7 @@ function play_game(){
 	}	
 	now.get_val(values);
 	var myScore = document.getElementById('score');
-	myScore.innerHTML = "Dice is rolling on the server - good luck!!!";
+	myScore.innerHTML = "Dice rolling ...";
 	var myDice = document.getElementById('role_dice');
 	myDice.disabled = "true";
 	var myDiceStack = document.getElementById('dice_stack');

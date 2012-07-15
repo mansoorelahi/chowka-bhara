@@ -18,7 +18,7 @@
 			    $.each(roomList, function(key, value){
 			    	now.groupCount(key, function(count){
 				    	now.getRoomStatus(key, function(is_locked){
-				    		var html_stuff = "<p class='box'>";
+				    		var html_stuff = "<span>";
 						    if(is_locked){
 						    	html_stuff += "<a onclick='return false;' class='room_box' href='/game?room=" + key + "'>" + value;
 						    	html_stuff += "<br/>" + count + " in play";
@@ -28,7 +28,7 @@
 						    	html_stuff += "<br/>" + count + " in play";
 						    	html_stuff += "<br/>Open";
 						    }
-						    html_stuff += "</a></p><p class='box_spacer'/>";
+						    html_stuff += "</a></span><p class='box_spacer'/>";
 						    if(value)
 						    	$('#server-room').append(html_stuff);
 				    	});
@@ -41,18 +41,23 @@
 	<body>
 		<div class="landing_page">
 			<center>
-				Chowka Bhara - A Classical Indian Multiplayer Board Game
-				<p>Features</p>
-				Content<br/>
-				Content<br/>
-				Content<br/>
-				Content<br/>
+				Chowka Bhara (ಚೌಕಬಾರ) - A Classical Indian Multiplayer Board Game
+				<p class="features">
+					Multi player game - play upto 4 players<br/>
+					Multi Game rooms support<br/>
+					Chat while u play<br/>
+					Classical game play<br/>
+				</p>
 				<hr/>
-				Start Playing Now ...<br/>
-				<div id="server-room" class='server_room'>
-					<p>Connecting ... Please Wait</p>
-				</div>
+				Start Playing Now ...
 			</center>
+			<p>
+				<span class="box"></span>
+				<span id="server-room" class="server_room">
+					<span>Connecting ... Please Wait</span>
+				</span>
+				<span class="box"></span>
+			</p>
 		</div>
 	</body>
 </html>

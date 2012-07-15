@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Chowka Bhara</title>
+		<title>Chowka Bhara - ಚೌಕಬಾರ</title>
 		<link type="text/css" rel="stylesheet" href="main.css" media="screen">
 		<script type="text/javascript" src="jquery.min.js"></script>
 		<script type="text/javascript" src="jquery.url.js"></script>
@@ -17,13 +17,13 @@
 			function refresh_users_list(){
 				// get all group users and populate the list
 	      now.getGroupUsers(function(users){
-	      	var users_list = "Remove player(s) : ";
+	      	var users_list = " | ";
 	      	$.each(users, function(key, user){
 	      		if(is_moderator && user != moderator){
 	      			now.getUserNameById(user, function(name){
 								users_list += "<a class='menu_item' href='#' user_id='" +
-								 user + "' id='" + user + "'>Player " +
-		      			 name + "</a>&nbsp;&nbsp;&nbsp;";	      				
+								 user + "' id='" + user + "'>remove " +
+		      			 name.substring(0, 10) + "</a>&nbsp;&nbsp;";	      				
 		      			$("#users_list").html(users_list);
 							});	      			
 	      		}
@@ -96,7 +96,7 @@
 				      			is_moderator = true;
 				      			$("#moderator_menu").show(400);
 				      			$("#role_dice").removeAttr("disabled");
-				      			$('#score').html("Please ROLL DICE ...");
+				      			$('#score').html("Please roll ...");
 				      			now.distributeGamePlay(now.name + " starts the game by rolling the dice first, please wait till room is locked");
 				      		}
 				      		now.distributeGamePlay(load_msg);
@@ -182,8 +182,26 @@
 		</div>
 		<div id="backgroundPopup"></div>
 
-		<font size='3'><center>Chowka Bhara - A Classical Indian Multiplayer Board Game</center></font>
-		<center><i>( Do not press Refresh or back button after once the game starts )</i></center>
+		<p class="game_heading">
+			<span style='float:left; padding: 5px;'>
+				<font size='2'>
+					Chowka Bhara (ಚೌಕಬಾರ)
+					<i>( Do not press Refresh or Back )</i>
+				</font>
+			</span>
+			<span style='float:right; padding: 5px;'>
+				<span id="menu" class='menu'>
+					<span id='menu_messages'></span>
+					<a class='menu_item' id='help_div' href='#'>Help</a> | 
+					<a class='menu_item' id='leave_room' href='#'>Leave Room</a>
+					<span id="moderator_menu" class="moderator_menu">
+						 | <a class='menu_item' id='lock_room' href='#'>Lock Room</a>
+						<span id='users_list'></span>					
+					</span>
+				</span>
+			</span>
+		</p>
+
 		<p id='game_play_info' class="game_play"></p>
 		<div id="holder" class="holder"></div>
 		<div class="game_panel">
@@ -195,20 +213,9 @@
 			<div class="messages">
 				<form name='send_message' id='send_message' action='/'>
 					<input type="text" id="text-input" maxlength="40"/>
-					<input type="submit" value="Send message" id="send-button"/>
+					<input type="submit" value="Send" id="send-button"/>
 				</form>
 				<p id="messages"></p>
-			</div>
-			<hr/>
-			<div id="menu" class='menu'>
-				<p id='menu_messages'></p>
-				<a class='menu_item' id='help_div' href='#'>Help</a>
-				<a class='menu_item' id='leave_room' href='#'>Leave Room</a>
-				<span id="moderator_menu" class="moderator_menu">
-					<a class='menu_item' id='lock_room' href='#'>Lock Room</a>
-					<br/>				
-					<p id='users_list'></p>					
-				</span>
 			</div>
 		</div>
 	</body>
