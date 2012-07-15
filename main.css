@@ -18,8 +18,8 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .messages{
-	height: 250px;
-	padding: 10px;
+	height: 200px;
+	padding: 5px;
 	overflow: auto;
 	font-size: 11px;
 }
