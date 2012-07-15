@@ -155,10 +155,10 @@
 						$('#dice_stack').html("");
 						if(message.indexOf(expr) != -1){
 							$('#role_dice').removeAttr("disabled");
-							$('#score').html("Please ROLL DICE ...");
+							$('#score').html("Please roll");
 						}else{
 							$('#role_dice').attr("disabled", "disabled");						
-							$('#score').html("Wait for your turn ...");
+							$('#score').html("Wait for turn");
 						}
 					}
 					prev_message = message;
