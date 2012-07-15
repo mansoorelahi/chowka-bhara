@@ -8,7 +8,7 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .game_heading{
-	height: 35px;
+	height: 30px;
 	background-color: #13354f;
 	color: #fff;
 }
@@ -18,7 +18,7 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .messages{
-	height: 200px;
+	height: 185px;
 	padding: 5px;
 	overflow: auto;
 	font-size: 11px;
@@ -82,12 +82,10 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .game_panel{
-	width: 250px;
+	width: 200px;
 	float: right;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	background-color: #abc;
-	padding: 5px;
+	padding: 3px;
 }
 
 .moderator_menu{
@@ -160,18 +158,16 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .game_play{
-	font-size: 13px;
+	font-size: 11px;
 	color: maroon;
-	padding: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
+	padding: 2px;
 	background-color: #abc;
-	height: 70px;
+	height: 50px;
 	overflow: auto;
 }
 
 .current_info{
-	font-size: 16px;
+	font-size: 13px;
 	font-weight: bold;
 	color: green;
 }
@@ -182,8 +178,6 @@ h1, h2, h3, h4, h5, h6, p{
 
 .dice_stack{
 	padding: 2px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	background-color: #aaa;
 	border: 2px solid #ddd;
 	color: maroon;
@@ -192,5 +186,5 @@ h1, h2, h3, h4, h5, h6, p{
 
 .stack{
 	padding: 2px;
-	height: 20px;
+	height: 15px;
 }

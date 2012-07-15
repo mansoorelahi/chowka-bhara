@@ -394,7 +394,7 @@ var kharab_player_id = [4, 1, 3, 2];
 var kharab = 0;
 
 function loadCB() {
-	r = Raphael("holder", 500, 550);	
+	r = Raphael("holder", 500, 500);	
 	var dragger = function () {
 			this.ox = this.type == "rect" ? this.attr("x") : this.attr("cx");
 			this.oy = this.type == "rect" ? this.attr("y") : this.attr("cy");
@@ -569,23 +569,23 @@ function loadCB() {
 
 				// create pawns legend
 				if(legend_index == 0) {
-					r.circle(left_width + 50, 268, legend_radius).attr("fill", color);	
-					l_text_l = r.text(left_width + 25, 300, "")
+					r.circle(left_width + 50, 263, legend_radius).attr("fill", color);	
+					l_text_l = r.text(left_width + 25, 295, "")
           	.attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});				
 				}
 				if(legend_index == 1){
-					r.circle(left_width + 258, 50, legend_radius).attr("fill", color);
-					l_text_t = r.text(left_width + 300, 50, "")
+					r.circle(left_width + 255, 50, legend_radius).attr("fill", color);
+					l_text_t = r.text(left_width + 298, 50, "")
           	.attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});
 				}
 				if(legend_index == 2){
-					r.circle(left_width + 258, 485, legend_radius).attr("fill", color);	
-					l_text_b = r.text(left_width + 300, 485, "")
+					r.circle(left_width + 255, 470, legend_radius).attr("fill", color);	
+					l_text_b = r.text(left_width + 298, 470, "")
           	.attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});				
 				} 
 				if(legend_index == 3){
-					r.circle(left_width + 475, 268, legend_radius).attr("fill", color);
-					l_text_r = r.text(left_width + 480, 300, "")
+					r.circle(left_width + 475, 263, legend_radius).attr("fill", color);
+					l_text_r = r.text(left_width + 480, 295, "")
           	.attr({"fill": "#000", "font-size": legend_font, "font-family": "Arial"});
 				}
 				legend_index += 1;
