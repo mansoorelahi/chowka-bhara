@@ -27,9 +27,9 @@ h1, h2, h3, h4, h5, h6, p{
 .landing_page{
 	font-size: 24px;
 	background-color: #13354f;
-	color: #DDD;
-	height: 800px;
-	padding: 20px;
+	color: #ddd;
+	height: 560px;
+	padding: 2px;
 }
 
 .features{
