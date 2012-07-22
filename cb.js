@@ -147,11 +147,12 @@ function returnHome(pawn_id){
 
 function clear_from_box(from_box) {
 	if(safe_houses.findIndex(from_box)>=0) {
-                console.log("_do_nothing for safe houses");
+                //console.log("_do_nothing for safe houses");
                 return true;
         }
 
-	if(window.boxes[from_box].occupied_player.length == 1) {
+	if(window.boxes[from_box].occupied_player.length >= 1) {
+console.log("clearing " + from_box );
 		window.boxes[from_box].occupied = 0;
 		window.boxes[from_box].occupied_player.splice(0,1);
 		window.boxes[from_box].has_two = 0;
@@ -166,8 +167,8 @@ function clear_from_box(from_box) {
 function isPairing(pawn_moved, from_box, to_box) {
 	var pawn1 = getPawnById(pawn_moved);
 	var pawn2 = getPawnById(boxes[to_box].occupied_player[0]);
-	console.log("inside");
-	console.log(boxes[to_box]);
+	//console.log("inside isPairing");
+	//console.log(boxes[to_box]);
 	if(pawn1.home == pawn2.home)
 	{
 //		boxes[to_box].occupied_player.push(pawn_moved);
@@ -240,7 +241,7 @@ function gatti_attack(from_box, to_box) {
 }
 
 function isAttackSuccessful(pawn_moved, from_box, to_box) {
-	if(boxes[from_box].has_two == 1 && boxes[to_box].has_two == 1) {
+	if((boxes[from_box].has_two == 1 || safe_houses.findIndex(from_box)>=0) && boxes[to_box].has_two == 1) {
 
 		var pawn1 = getPawnById(pawn_moved);
 		var pawn2 = getPawnById(boxes[to_box].occupied_player[0]);
@@ -261,8 +262,8 @@ function isAttackSuccessful(pawn_moved, from_box, to_box) {
 	{	
 		//change the occupied_player 
 		pawn_attacked = getPawnById(boxes[to_box].occupied_player[0]);
-		console.log("pawn attacked");
-		console.log(pawn_attacked);
+		//console.log("pawn attacked");
+		//console.log(pawn_attacked);
 		returnHome(pawn_attacked);
 		boxes[to_box].occupied_player[0] = pawn_moved;
 		free_hit =1;
@@ -272,6 +273,9 @@ function isAttackSuccessful(pawn_moved, from_box, to_box) {
 
 //clear from_box wherever its returning true
 function isLegal(pawn_moved, from_id, to_id, value) {
+
+console.log("inside isLegal");
+
 	gatti = typeof gatti !== 'undefined' ? gatti : 0;
 	var player_id = getPlayerId(pawn_moved);
 	var from_indx = players[player_id-1].path.findIndex(from_id);
@@ -281,7 +285,6 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 	var pawn = getPawnById(pawn_moved);
 //value should be proper for normal pawn movement 
 	if(((to_indx - from_indx) != value) && (!(pawn.is_pollu ==1 || pawn.is_gatti == 1))){
-		console.log("seriously?");
 		return false;
 	}
 
@@ -292,12 +295,13 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 
 //no attack and no pairing in safe house
 	if(safe_houses.findIndex(to_id)>=0) {
-                console.log("_do_nothing");
+                //console.log("_do_nothing");
 		//clear_from_box(from_box);
                 return true;
         }
 //if its not players turn
 	if(player_id != (now.turn + 1)) {
+console.log("got u");
                 return false;
         }
 
@@ -319,6 +323,7 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 
 //if the to_box is occupied - check for pairing and attack else its a legal move
 	if(window.boxes[to_id].occupied != 0) {	
+console.log("attack or pair");
 		//check if its a gatti
 		//gatti is valid only in the inner circle
 		//if(inner_square.findIndex(to_id) >= 0 ) {	
@@ -343,7 +348,8 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 	}
 	else
 	{
-		console.log("here - not good");
+		//console.log("here - not good");
+
 		//clear the from_box - important!
 		//clear_from_box(from_box);
 
@@ -352,12 +358,10 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 		window.boxes[to_id].occupied_player[0] = pawn_moved;
 
 		if(pawn.is_gatti) {
-//			partner_pawn = getPawnById(this_pawn.partner_pawn_id);
-///			partner_pawn.fig.attr(att);
 			window.boxes[to_id].has_two = 1;
 		}
 				
-		console.log(window.boxes[to_id]);
+		//console.log(window.boxes[to_id]);
 
 		return true;
 	}
@@ -368,14 +372,16 @@ now.updatePawn = function(pawn_id, att, from_id, to_id, value) {
 	if(!is_pawn_moved)
 	{
 
+console.log("inside update");
 		var pawn = getPawnById(pawn_id);
 		var old_att = pawn.fig.attr;
 		pawn.fig.attr(att);
 		if(isLegal(pawn_id, from_id, to_id, value)) {
+console.log("coming here");
 			pawn.currentBox = to_id;
 			pawn.fig.attr(att);
 			clear_from_box(from_id);
-			if(pawn.is_gatti) {
+			if(pawn.is_gatti == 1 || pawn.is_pollu == 1) {
 console.log("coming here");
 
 				var box_dim = getBoxDim(to_id);
@@ -383,7 +389,7 @@ console.log("coming here");
 				var gatti_att = {cx: (box_dim.x + 35) - 15, cy: box_dim.y + 35}
 				pawn.fig.attr(gatti_att);
 
-				var partner_pawn = getPawnById(Number(this_pawn.partner_pawn_id));
+				var partner_pawn = getPawnById(Number(pawn.partner_pawn_id));
 				var partner_att = {cx: (box_dim.x + 35) + 15, cy: box_dim.y + 35}
 				partner_pawn.fig.attr(partner_att);
 
@@ -478,8 +484,6 @@ function loadCB() {
 			this.ox = this.type == "rect" ? this.attr("x") : this.attr("cx");
 			this.oy = this.type == "rect" ? this.attr("y") : this.attr("cy");
 			this.animate({"fill-opacity": .2}, 500);
-			console.log("id = ");
-			console.log(this.id);
 	},
 		move = function (dx, dy) {
 				var att = this.type == "rect" ? {x: this.ox + dx, y: this.oy + dy} : {cx: this.ox + dx, cy: this.oy + dy};
@@ -514,7 +518,6 @@ function loadCB() {
 					return;
 				}
 				spliceMe(this.id, from_id, to_id);
-				console.log(boxes[to_id]);
 				if(!isLegal(this.id, from_id, to_id, value))
 				{
 					var att = this.type == "rect" ? {x: this.ox, y: this.oy} : {cx: this.ox , cy: this.oy};
@@ -549,7 +552,6 @@ function loadCB() {
 					if(this_pawn.is_gatti  || this_pawn.is_pollu ) {
 
 						var box_dim = getBoxDim(to_id);
-console.log("box dim : " + box_dim);
 						var gatti_att = {cx: (box_dim.x + 35) - 15, cy: box_dim.y + 35}
 						this.attr(gatti_att);
 
@@ -570,7 +572,7 @@ console.log("box dim : " + box_dim);
 					//make the pawn moved to true so that it wont get moved again
 					is_pawn_moved = 1;
 					now.update(this.id, att, from_id, to_id, value);
-console.log(values.length);
+console.log(value);
 					if(values.length <= 0) {
 						values = [];
 						now.turn_change();
