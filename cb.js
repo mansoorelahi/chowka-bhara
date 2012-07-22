@@ -15,6 +15,7 @@ function Pawn () {
 	this.currentBox = this.home;
 	this.inc_id = 1;
 	this.is_gatti = 0;
+	this.is_pollu = 0;
 	this.partner_pawn_id = 0;
 }
 
@@ -279,7 +280,8 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 
 	var pawn = getPawnById(pawn_moved);
 //value should be proper for normal pawn movement 
-	if(((to_indx - from_indx) != value) && ((pawn.is_pollu !=1 || pawn.is_gatti != 1))){
+	if(((to_indx - from_indx) != value) && (!(pawn.is_pollu ==1 || pawn.is_gatti == 1))){
+		console.log("seriously?");
 		return false;
 	}
 
@@ -319,13 +321,13 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 	if(window.boxes[to_id].occupied != 0) {	
 		//check if its a gatti
 		//gatti is valid only in the inner circle
-		if(inner_square.findIndex(to_id) >= 0 ) {	
+		//if(inner_square.findIndex(to_id) >= 0 ) {	
 			if(isPairing(pawn_moved, from_id, to_id))
 			{
 				//clear_from_box(from_box);
 				return true;
 			}
-		}
+		//}
 	
 		//if its not pairing - then it should be an attack
 		if(isAttackSuccessful(pawn_moved, from_id, to_id))
@@ -402,7 +404,13 @@ console.log("coming here");
 
 function spliceMe(pawn_moved, from_id, to_id){
 	var player_id = getPlayerId(pawn_moved);
+	var this_pawn = getPawnById(pawn_moved);
 	var move = (players[player_id-1].path.findIndex(to_id) - players[player_id-1].path.findIndex(from_id));
+
+	if(this_pawn.is_pollu == 1 || this_pawn.is_gatti == 1 ) {
+		move = move*2;
+	}
+
 	var spliced_val = [];
 	for (v in values){
 		if(move == values[v]){
@@ -541,7 +549,7 @@ function loadCB() {
 					if(this_pawn.is_gatti  || this_pawn.is_pollu ) {
 
 						var box_dim = getBoxDim(to_id);
-
+console.log("box dim : " + box_dim);
 						var gatti_att = {cx: (box_dim.x + 35) - 15, cy: box_dim.y + 35}
 						this.attr(gatti_att);
 
@@ -562,7 +570,7 @@ function loadCB() {
 					//make the pawn moved to true so that it wont get moved again
 					is_pawn_moved = 1;
 					now.update(this.id, att, from_id, to_id, value);
-
+console.log(values.length);
 					if(values.length <= 0) {
 						values = [];
 						now.turn_change();
