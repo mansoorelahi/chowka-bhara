@@ -223,7 +223,7 @@ function gatti_attack(from_box, to_box) {
 	if(pawn_attacked.is_gatti ==1) {
 		returnHome(pawn_attacked);
 		pawn_attacked.is_gatti = 0;
-		pawn_attacked.gatti_line.clear();
+		pawn_attacked.gatti_line = undefined;
 		pawn_attacked_2 = getPawnById(pawn_attacked.partner_pawn_id);
 		returnHome(pawn_attacked_2);
 		pawn_attacked_2.is_gatti = 0;
@@ -292,17 +292,17 @@ console.log("inside isLegal");
 	if((pawn.is_gatti == 1) && (value % 2 !=0)) {
 		return false;
 	}
+//if its not players turn
+	if(player_id != (now.turn + 1)) {
+console.log("got u");
+                return false;
+        }
 
 //no attack and no pairing in safe house
 	if(safe_houses.findIndex(to_id)>=0) {
                 //console.log("_do_nothing");
 		//clear_from_box(from_box);
                 return true;
-        }
-//if its not players turn
-	if(player_id != (now.turn + 1)) {
-console.log("got u");
-                return false;
         }
 
 //if player has not killed anyone - he is not allowed in the inner square
