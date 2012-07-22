@@ -682,7 +682,7 @@ function getuuid() {
 	setTimeout(function() {
 		uuid = now.uuid;
 		now.distributeGamePlay("Thanks for your patience... " + now.name +
-			" is all set to begin play, Moderator starts first");
+			" is ready, Moderator starts first");
 		setTimeout(function() {
 			now.addPlayer(uuid);
 			set_legends();
@@ -691,52 +691,46 @@ function getuuid() {
 }
 
 var user_x = 0;
-var legend_completed = false;
 var l_text_t, l_text_b, l_text_l, l_text_r;
 var legend_name = 8, legend_font = 12;
+var set_legend_attempts = 10;
+function set_legend_name(element, name){
+	element.attr("text", name);
+	user_x += 1;
+}
+
 function set_legends(){
   now.getGroupUsers(function(group_users){
   	var users = group_users;
   	if(users != undefined){
-			if(users.length > 0 && !legend_completed){
-			  now.getUserNameById(users[user_x], function(user_name){
-				  var name = user_name.substring(0, legend_name).toLowerCase();
-				  switch (user_x){
-				    case 0:
-				      l_text_t.attr("text", name);
-				      user_x += 1;
-				      break;
-				    case 1:         
-				      l_text_r.attr("text", name);
-				      user_x += 1;
-				      break;
-				    case 2:
-				      l_text_b.attr("text", name);
-				      break;
-				    case 3:
-				      l_text_l.attr("text", name);
-				      user_x += 1;
-				      legend_completed = true;
-				      break;
-				    default: break;
-				  }
+			if(users.length > 0){
+				now.getUserNameById(users[user_x], function(user_name){
+			  	var name = user_name.substring(0, legend_name).toLowerCase();			  	
+			  	if(user_x < users.length)
+			  		switch (user_x){
+					    case 0: set_legend_name(l_text_t, name);	  				
+					      			break;
+					    case 1: set_legend_name(l_text_r, name);
+					      			break;
+					    case 2: set_legend_name(l_text_b, name);
+					      			break;
+					    case 3: set_legend_name(l_text_l, name);
+					      			break;
+					    default: break;
+					  }
 			  });
 			}
-			if(user_x < 4 && !legend_completed){
-		  	setTimeout(function(){
+			if(set_legend_attempts >= 0){
+				set_legend_attempts -= 1;
+				setTimeout(function(){
 		  		set_legends();
-		  	}, 3000);
-		  }
-		}else if(!legend_completed){
+		  	}, 5000);
+			}
+		}else{
 			setTimeout(function(){
 	  		set_legends();
 	  	}, 3000);
 		}
-  });
-
-  // check room status if its locked or not
-  now.getRoomStatus(undefined, function(status){
-  	legend_completed = status;
   });
 }
 
