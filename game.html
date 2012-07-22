@@ -170,6 +170,10 @@
 					$("#text-input").val("");
 					return false;
 				});				
+
+				$("#pass_turn").live('click', function(){
+					now.turn_change();
+				});
 			});
 		</script>
 	</head>
@@ -196,6 +200,7 @@
 					<a class='menu_item' id='leave_room' href='#'>Leave Room</a>
 					<span id="moderator_menu" class="moderator_menu">
 						 | <a class='menu_item' id='lock_room' href='#'>Lock Room</a>
+						 | <a class='menu_item' id='pass_turn' href='#'>Pass Turn</a>
 						<span id='users_list'></span>					
 					</span>
 				</span>
