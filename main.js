@@ -192,9 +192,9 @@ Array.prototype.findIndex = function(value){
   return ctr;
 }
 
-everyone.now.update = function(pawn_id, att, from_id, to_id) {
+everyone.now.update = function(pawn_id, att, from_id, to_id, value) {
 	var group = nowjs.getGroup(this.now.serverRoom);
-  group.now.updatePawn(pawn_id, att, from_id, to_id);
+  group.now.updatePawn(pawn_id, att, from_id, to_id, value);
 }
 
 everyone.now.turn_change = function(){
