@@ -89,15 +89,11 @@ function getPawnById(pawn_id) {
 }
 
 function getBoxId(x, y) {
-
-	x = x - left_width;
-	y = y - (y%82);
-	
-	_i = Math.floor(x / (box_width+2));
-	_j = Math.floor(y/ 82);
-
-	_id = _i*10+_j;
-	return _id
+	x = x + left_width;	
+	_i = Math.floor(x / box_width);
+	_j = Math.floor(y / box_width);
+	_id = _i * 10 + _j;
+	return _id;
 }
 
 function getBoxDim(id) {
@@ -280,8 +276,6 @@ function isLegal(pawn_moved, from_id, to_id, value) {
 	var player_id = getPlayerId(pawn_moved);
 	var from_indx = players[player_id-1].path.findIndex(from_id);
 	var to_indx = players[player_id-1].path.findIndex(to_id);
-console.log(from_indx);
-console.log(to_indx);
 //gatti in the way - illegal - TODO
 
 	var pawn = getPawnById(pawn_moved);
@@ -511,20 +505,15 @@ function loadCB() {
 				this.animate({"fill-opacity": 1}, 500);
 				from_id = getBoxId(this.ox, this.oy);
 				to_id = getBoxId(this.attrs.cx , this.attrs.cy);
-
 				this_pawn = getPawnById(this.id);
-//console.log(from_id);
-//console.log(to_id);
-				
 				if(from_id == to_id) {
-					var att =  this.type == "rect" ? {x: this.ox + dx, y: this.oy + dy} : {cx: this.attrs.cx, cy: this.attrs.cy};
+					var att = this.type == "rect" ? {x: this.ox + dx, y: this.oy + dy} : {cx: this.attrs.cx, cy: this.attrs.cy};
                                         this_pawn.currentBox = to_id;
 					console.log("wtf!!");
 					now.update(this.id, att, from_id, to_id);
 					return;
 				}
 				spliceMe(this.id, from_id, to_id);
-				//window.value = values.pop();
 				console.log(boxes[to_id]);
 				if(!isLegal(this.id, from_id, to_id, value))
 				{
@@ -532,8 +521,6 @@ function loadCB() {
 					this.attr(att);
 					r.safari();
 					this_pawn.currentBox = from_id;
-					values.push(value);
-
 					console.log("illegal!!");
 
 					if(this_pawn.is_gatti  || this_pawn.is_pollu ) {
