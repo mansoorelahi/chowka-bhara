@@ -4,3 +4,16 @@ A. Attacking rules
 B. Pairing rules (Gatti)
 C. Safe house (Gatta)
 D. Multi-Player options
+
+1. Each player gets 4 pawns. Goal of the game is to take all 4 pawns to the center of the grid via defined pathway, specific to the player.
+2. Every time, player rolls his dice to get one of these values - 1,2,3,4,8. If a player gets 4 or 8, he gets to roll the dice again. 
+3. Each player has to kill at least one pawn of his opponent to enter the inner circle. 
+	For each kill, a player gets a free roll of dice.
+4. Safe houses : Boxes marked with X are safe houses. Here, opponents cannot kill the pawn. (It will be usually other player's home box)
+5. Gatti : It 2 pawns of same player are put in the same box (other than safe house) - it is called gatti. This can be done only in the inner circle. 
+	Once gatti is formed, a player cannot separate the pawns. 
+	They have to be moved together (only in multiples of 2). If a player gets 2, then he can move gatti one box ahead only.
+	A gatti can kill a single pawn but a single pawn cannot kill a gatti. A gatti can be killed by another gatti only.
+	2 gattis of same player cannot be in the same box.
+6. If the values are beyond game play - then the turn has to be forfeited. 
+7. If a player has multiple dice values, he can move any pawn for any value - need not guarantee the order.
