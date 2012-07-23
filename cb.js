@@ -303,7 +303,7 @@ console.log("got u");
         }
 
 //2 gattis cannot live together in the same box
-	if((pawn.is_gatti == 1) && (boxes[to_id].has_two == 1)) {
+	if(((pawn.is_gatti == 1) || (pawn.is_pollu ==1) ) && (boxes[to_id].has_two == 1)) {
 		var gatti_pawn2 = getPawnById(boxes[to_id].occupied_player[0]);
 		console.log(gatti_pawn2);
 		console.log(pawn);
