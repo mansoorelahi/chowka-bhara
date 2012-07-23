@@ -215,7 +215,7 @@ function c_kododu(pawn_moved, to_box) {
 	return false;
 }
 
-function gatti_attack(from_box, to_box) {
+function gatti_attack(pawn_moved, from_box, to_box) {
 	//returnHome( getPawnById(boxes[to_box].occupied_player[0] );
 	//returnHome( getPawnById(boxes[to_box].occupied_player[1] );
 	pawn_attacked = getPawnById(boxes[to_box].occupied_player[0]);
@@ -227,7 +227,7 @@ function gatti_attack(from_box, to_box) {
 		pawn_attacked_2 = getPawnById(pawn_attacked.partner_pawn_id);
 		returnHome(pawn_attacked_2);
 		pawn_attacked_2.is_gatti = 0;
-		pawn_attacked_2.gatti_line.clear();	
+		pawn_attacked_2.gatti_line = undefined;	
 
 		boxes[to_box].occupied_player[0] = pawn_moved;
 		boxes[to_box].occupied_player[1] = pawn_moved.partner_pawn_id;	
