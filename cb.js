@@ -24,7 +24,7 @@ function Box() {
 	this.occupied_player = new Array();
 	this.has_two = 0;
 	this.has_three = 0;
-
+	this.c_kodu = 0;
 }
 
 function Gatti() {
@@ -305,12 +305,25 @@ console.log("got u");
 //2 gattis cannot live together in the same box
 	if(((pawn.is_gatti == 1) || (pawn.is_pollu ==1) ) && (boxes[to_id].has_two == 1)) {
 		var gatti_pawn2 = getPawnById(boxes[to_id].occupied_player[0]);
-		console.log(gatti_pawn2);
-		console.log(pawn);
 		if(gatti_pawn2.home == pawn.home) {
 			return false;
 		}
 	}	
+
+//3 in a box not allowed for now : TODO : C- kododu is banned now
+	if(boxes[to_id].has_two == 1) {
+		var gatti_pawn2 = getPawnById(boxes[to_id].occupied_player[0]);
+		if(gatti_pawn2.home == pawn.home) {
+			// mu-pollu
+			// boxes[to_id].has_three = 1;
+			return false;
+		}
+		else {
+			// C - kododu
+			// boxes[to_id].c_kodu = 1; 
+			return false;
+		}	
+	}
 
 //no attack and no pairing in safe house
 	if(safe_houses.findIndex(to_id)>=0) {
