@@ -523,25 +523,26 @@ function loadCB() {
 					var att = this.type == "rect" ? {x: this.ox, y: this.oy} : {cx: this.ox , cy: this.oy};
 					this.attr(att);
 					r.safari();
+					this_pawn = getPawnById(this.id);
 					this_pawn.currentBox = from_id;
 					console.log("illegal!!");
 
 					if(this_pawn.is_gatti  || this_pawn.is_pollu ) {
-						var gatti_att = {cx: this.attrs.ox - 30, cy: this.attrs.oy}
+
+						var box_dim = getBoxDim(from_id);
+						var gatti_att = {cx: (box_dim.x + 35) - 15, cy: box_dim.y + 35}
 						this.attr(gatti_att);
+
 						var partner_pawn = getPawnById(Number(this_pawn.partner_pawn_id));
-						var partner_att = {cx: this.attrs.ox + 30, cy: this.attrs.oy}
+						var partner_att = {cx: (box_dim.x + 35) + 15, cy: box_dim.y + 35}
 						partner_pawn.fig.attr(partner_att);
 
-						var x2 = this.attrs.ox + 30;
-						var gatti_path_str = "M"+this.attrs.ox+" "+this.attrs.oy+"L"+x2+ " "+this.attrs.oy;
-						//var gatti_fig = window.r.path(gatti_path_str);
+						var x2 = this.attrs.cx + 30;
+						var gatti_path_str = "M"+this.attrs.cx+" "+this.attrs.cy+"L"+x2+ " "+this.attrs.cy;
 						this_pawn.gatti_line.attr({path : gatti_path_str});	
 						partner_pawn.gatti_line.attr({path: gatti_path_str});	
 
 					}
-
-
 				}
 				else
 				{
