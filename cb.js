@@ -180,6 +180,7 @@ function isPairing(pawn_moved, from_box, to_box) {
 		var y2 = pawn2.fig.attrs.cy;
 		var gatti_path_str = "M"+x1+" "+y1+"L"+x2+ " "+y2;
 		var gatti_fig = window.r.path(gatti_path_str);
+console.log(gatti_fig);
 
 		boxes[to_box].has_two = 1;
 		boxes[to_box].occupied_player[1] = pawn1.fig.id;
@@ -220,7 +221,7 @@ function gatti_attack(pawn_moved, from_box, to_box) {
 	//returnHome( getPawnById(boxes[to_box].occupied_player[1] );
 	pawn_attacked = getPawnById(boxes[to_box].occupied_player[0]);
 
-	if(pawn_attacked.is_gatti ==1) {
+	if((pawn_attacked.is_gatti ==1) || (pawn_attacked.is_pollu == 1)) {
 		returnHome(pawn_attacked);
 		pawn_attacked.is_gatti = 0;
 		pawn_attacked.gatti_line = undefined;
@@ -311,7 +312,7 @@ console.log("got u");
 	}	
 
 //3 in a box not allowed for now : TODO : C- kododu is banned now
-	if(boxes[to_id].has_two == 1) {
+	if((!((pawn.is_gatti == 1) || (pawn.is_pollu ==1))) && (boxes[to_id].has_two == 1)) {
 		var gatti_pawn2 = getPawnById(boxes[to_id].occupied_player[0]);
 		if(gatti_pawn2.home == pawn.home) {
 			// mu-pollu
