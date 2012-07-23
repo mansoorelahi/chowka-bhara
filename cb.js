@@ -298,6 +298,11 @@ console.log("got u");
                 return false;
         }
 
+//2 gattis cannot live together in the same box
+        if((pawn.is_gatti == 1) && (boxes[to_box].has_two == 1)) {
+                return false;
+        }	
+
 //no attack and no pairing in safe house
 	if(safe_houses.findIndex(to_id)>=0) {
                 //console.log("_do_nothing");
