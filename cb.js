@@ -289,9 +289,13 @@ console.log("inside isLegal");
 	}
 
 //only multiples of 2 allowed for gatti movement
-	if((pawn.is_gatti == 1) && (value % 2 !=0)) {
+	if(((pawn.is_gatti == 1) || (pawn.is_pollu ==1)) && (value % 2 !=0)) {
+		return false;
+	} 
+	if(((pawn.is_gatti == 1)  || (pawn.is_pollu ==1)) && ((to_indx < from_indx) || (((to_indx - from_indx)*2) != value))) {
 		return false;
 	}
+
 //if its not players turn
 	if(player_id != (now.turn + 1)) {
 console.log("got u");
@@ -299,9 +303,14 @@ console.log("got u");
         }
 
 //2 gattis cannot live together in the same box
-        if((pawn.is_gatti == 1) && (boxes[to_box].has_two == 1)) {
-                return false;
-        }	
+	if((pawn.is_gatti == 1) && (boxes[to_id].has_two == 1)) {
+		var gatti_pawn2 = getPawnById(boxes[to_id].occupied_player[0]);
+		console.log(gatti_pawn2);
+		console.log(pawn);
+		if(gatti_pawn2.home == pawn.home) {
+			return false;
+		}
+	}	
 
 //no attack and no pairing in safe house
 	if(safe_houses.findIndex(to_id)>=0) {
