@@ -154,6 +154,7 @@
 					if(message.indexOf("turn to play") != -1){
 						$('#dice_stack').html("");
 						if(message.indexOf(expr) != -1){
+							clear_values();
 							$('#role_dice').removeAttr("disabled");
 							$('#score').html("Please roll");
 						}else{
@@ -172,6 +173,7 @@
 				});				
 
 				$("#pass_turn").live('click', function(){
+					clear_values();
 					now.turn_change();
 				});
 			});

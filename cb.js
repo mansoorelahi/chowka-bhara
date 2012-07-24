@@ -632,11 +632,10 @@ function loadCB() {
 					//make the pawn moved to true so that it wont get moved again
 					is_pawn_moved = 1;
 					now.update(this.id, att, from_id, to_id, value);
-console.log(value);
+					console.log(value);
 					if(values.length <= 0) {
-						values = [];
+						clear_values();
 						now.turn_change();
-						value = 0;
 					}else{
 						updateDiceStackUI();
 					}
@@ -736,6 +735,11 @@ console.log(value);
 	}
 	create_players(4);
 	getuuid();
+}
+
+function clear_values(){
+	values = [];
+	value = 0;											
 }
 
 function getuuid() {
