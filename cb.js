@@ -428,6 +428,7 @@ console.log("inside update");
 //				var ppawn = getPawnById(pawn.partner_pawn_id);
 //				ppawn.fig.attr(att2);
 			}		
+		return true;
 		}
 
 
