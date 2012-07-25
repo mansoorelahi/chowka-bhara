@@ -362,13 +362,13 @@ console.log("got u");
 console.log("attack or pair");
 		//check if its a gatti
 		//gatti is valid only in the inner circle
-		//if(inner_square.findIndex(to_id) >= 0 ) {	
+		if(inner_square.findIndex(to_id) >= 0 ) {	
 			if(isPairing(pawn_moved, from_id, to_id))
 			{
 				//clear_from_box(from_box);
 				return true;
 			}
-		//}
+		}
 	
 		//if its not pairing - then it should be an attack
 		if(isAttackSuccessful(pawn_moved, from_id, to_id))
