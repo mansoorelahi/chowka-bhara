@@ -225,11 +225,13 @@ function gatti_attack(pawn_moved, from_box, to_box) {
 		returnHome(pawn_attacked);
 		pawn_attacked.is_gatti = 0;
 		pawn_attacked.is_pollu = 0;
+		pawn_attacked.gatti_line.attr({stroke: "white"});
 		pawn_attacked.gatti_line = undefined;
 		pawn_attacked_2 = getPawnById(pawn_attacked.partner_pawn_id);
 		returnHome(pawn_attacked_2);
 		pawn_attacked_2.is_gatti = 0;
 		pawn_attacked_2.is_pollu = 0;
+		pawn_attacked_2.gatti_line.attr({stroke: "white"});
 		pawn_attacked_2.gatti_line = undefined;	
 
 		boxes[to_box].occupied_player[0] = pawn_moved;
@@ -633,10 +635,16 @@ function loadCB() {
 					is_pawn_moved = 1;
 					now.update(this.id, att, from_id, to_id, value);
 					console.log(value);
-					if(values.length <= 0) {
+					if(values.length <= 0 && free_hit != 1) {
 						clear_values();
 						now.turn_change();
-					}else{
+					}else if(free_hit ==1){
+						var myDice = document.getElementById('role_dice');
+						var myScore = document.getElementById('score');
+						myScore.innerHTML = "Please Roll"; 
+						myDice.disabled = "";
+						updateDiceStackUI();
+					}else {	
 						updateDiceStackUI();
 					}
 				}
@@ -812,15 +820,18 @@ function play_game(){
 	myDice.disabled = "true";
 	var myDiceStack = document.getElementById('dice_stack');
 	setTimeout(function() {
-			free_hit = 0;
 			var server_val = now.vali;
 			values.push(server_val);
-      myScore.innerHTML = "You rolled " + server_val;
+		        myScore.innerHTML = "You rolled " + server_val;
 			if(server_val == 4 || server_val == 8) {
 				free_hit = 1;
+			}
+
+			if(free_hit == 1) {
 				myDice.disabled = "";
 				now.distributeGamePlay(this.now.name + " gets a free hit - rolled " + server_val);
 			}
+
 			if(values.length > 0 && free_hit == 1){
 				var ds = myDiceStack.innerHTML + "<div class='dice_stack'>" + server_val + "</div>"
 				myDiceStack.innerHTML = ds;
@@ -833,6 +844,7 @@ function play_game(){
 				}
 			}
 			prev_hit = free_hit;
+			free_hit = 0;
 			
 	}, 3000);
 }
