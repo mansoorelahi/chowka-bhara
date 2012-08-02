@@ -820,6 +820,7 @@ function play_game(){
 	myDice.disabled = "true";
 	var myDiceStack = document.getElementById('dice_stack');
 	setTimeout(function() {
+			free_hit = 0;
 			var server_val = now.vali;
 			values.push(server_val);
 		        myScore.innerHTML = "You rolled " + server_val;
@@ -844,7 +845,6 @@ function play_game(){
 				}
 			}
 			prev_hit = free_hit;
-			free_hit = 0;
 			
 	}, 3000);
 }
