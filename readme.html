@@ -1,6 +1,6 @@
 <span id='help_close_link' class='help_close_link' style='float:right;'><a href='#'>X</a></span>
 <br/>
-<span><center>Game Rules</center></span>
+<span><center><b>Game Rules</b></center></span>
 <hr/>
 <p>
 	A nodejs implementation of the Classical game of 
@@ -16,6 +16,31 @@
 	<br/>
 	D. Multi-Player options
 	<br/>
+	<hr/>
+	<ul>
+		<li>Each player gets 4 pawns. Goal of the game is to take all 4 pawns to the center of the grid via defined pathway, specific to the player.</li>
+		<li>Every time, player rolls his dice to get one of these values - 1,2,3,4,8. If a player gets 4 or 8, he gets to roll the dice again.</li>
+		<li>Each player has to kill at least one pawn of his opponent to enter the inner circle. 
+		For each kill, a player gets a free roll of dice.</li>
+		<li>Safe houses : Boxes marked with X are safe houses. Here, opponents cannot kill the pawn. (It will be usually other player's home box)</li>
+		<li>Gatti : 
+			<ul>
+				<li>If 2 pawns of same player are put in the same box (other than safe house) - it is called gatti. This can be done only in the inner circle.</li>
+				<li>Once gatti is formed, a player cannot separate the pawns.</li>
+				<li>They have to be moved together (only in multiples of 2). If a player gets 2, then he can move gatti one box ahead only.</li>
+				<li>A gatti can kill a single pawn but a single pawn cannot kill a gatti. A gatti can be killed by another gatti only.</li>
+				<li>2 gatti's of same player cannot be in the same box.</li>
+			</ul>
+		<li>If the values are beyond game play - then the turn has to be forfeited. Currently this is done by the moderator who is appointed before the game starts.</li>
+		<li>If a player has multiple dice values, he can move any pawn for any value - need not guarantee the order.</li>
+	</ul>
+</p>
+<p>
+	<center>
+		<b>Schematic moving path for player pawns for player 1 with anti-clockwise movements</b>
+		<br/><br/>
+		<img src="cb_help_pic.png" width="300" height="300" alt="help image" />
+	</center>
 </p>
 <hr/>
 <center><p id='help_close_link' class='help_close_link'><a href='#'>Close Help</a></p></center>

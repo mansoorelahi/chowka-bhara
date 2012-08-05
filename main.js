@@ -12,7 +12,7 @@ handle["/jquery_popup.js"] = requestHandlers.jquerypopupjs;
 handle["/main.css"] = requestHandlers.css;
 handle["/game"] = requestHandlers.game;
 handle["/favicon.ico"] = requestHandlers.favicon;
-handle["/ajax-loading.gif"] = requestHandlers.loading_image;
+handle["/cb_help_pic.png"] = requestHandlers.loading_image;
 handle["/README"] = requestHandlers.README;
 
 var nowjs = require("now");

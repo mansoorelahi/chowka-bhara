@@ -6,6 +6,7 @@
 		<link type="text/css" rel="stylesheet" href="main.css" media="screen">
 		<script type="text/javascript" src="jquery.min.js"></script>
 		<script src="nowjs/now.js"></script> 
+		<script src="jquery_popup.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
 				now.ready(function(){
@@ -34,11 +35,31 @@
 				    	});
 				    });
 					});
-				}				
+				}		
+
+				$("#help_div").live('click', function(){
+					$.get('README', function(data) {
+	        	$("#contactArea").html($(data));
+	        	loadPopup();
+						centerPopup();
+	      	});
+				});
+
+				$("#help_close_link").live('click', function(){
+					disablePopup();
+				});			
 			});
+
 		</script>
 	</head>
 	<body>
+		<div id="popupContact">		
+			<div id="contactArea">
+				<center><b>Loading Please wait ...</b></center> 
+			</div>
+		</div>
+		<div id="backgroundPopup"></div>
+		
 		<div class="landing_page">
 			<center>
 				Chowka Bhara (ಚೌಕಬಾರ) - A Classical Indian Multiplayer Board Game
@@ -48,6 +69,7 @@
 					Chat while u play<br/>
 					Classical game play<br/>
 				</p>
+				<a id="help_div" class='help_link' href="#">How do I play ... ?</a>
 				<hr/>
 				Start Playing Now ...
 			</center>

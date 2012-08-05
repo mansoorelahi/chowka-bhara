@@ -122,8 +122,6 @@ h1, h2, h3, h4, h5, h6, p{
 	_position:absolute; /* hack for internet explorer 6*/
 	height:100%;
 	width:100%;
-	top:0;
-	left:0;
 	background:#000;
 	z-index:8;
 }
@@ -134,14 +132,14 @@ h1, h2, h3, h4, h5, h6, p{
 	display:none;
 	position:fixed;
 	_position:absolute; /* hack for internet explorer 6*/
-	height:400px;
-	width:500px;
+	height: 450px;
+	width: 625px;
 	background:#fff;
 	border:2px solid grey;
 	z-index:9;
-	padding:20px;
-	font-size:14px;
-	color: maroon;
+	padding:10px;
+	font-size:13px;
+	color: #000;
 	overflow:auto;
 }
 
@@ -187,4 +185,9 @@ h1, h2, h3, h4, h5, h6, p{
 .stack{
 	padding: 2px;
 	height: 15px;
+}
+
+.help_link{
+	font-size: 13px;
+	color: gold;
 }

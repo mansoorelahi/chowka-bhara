@@ -10,7 +10,7 @@ function favicon(response) {
 
 function loading_image(response) {
   console.log("cb_server:" + new Date() + ":Request handler 'loading_image' was called.");
-	fs.readFile('ajax-loading.gif', function(err, data){
+	fs.readFile('cb_help_pic.png', function(err, data){
 		response.writeHead(200, {'Content-Type':'image/gif'});
 		response.write(data);
 		response.end();
