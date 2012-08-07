@@ -246,14 +246,16 @@ function gatti_attack(pawn_moved, from_box, to_box) {
 }
 
 function isAttackSuccessful(pawn_moved, from_box, to_box) {
+
+	var pawn1 = getPawnById(pawn_moved);
+	var pawn2 = getPawnById(boxes[to_box].occupied_player[0]);
+	if(pawn1.home == pawn2.home) {
+		return false;
+	}
+
 	if((boxes[from_box].has_two == 1 || safe_houses.findIndex(from_box)>=0) && boxes[to_box].has_two == 1) {
 
-		var pawn1 = getPawnById(pawn_moved);
-		var pawn2 = getPawnById(boxes[to_box].occupied_player[0]);
-		if(pawn1.home == pawn2.home) {
-			return false;
-		}
-
+	
 		return gatti_attack(pawn_moved, from_box, to_box);
 	}
 
